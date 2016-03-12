@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.srmn.xwork.gpstoolkit.TrackerFragment">
+
+    <ListView
+        android:id="@+id/el_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        android:cacheColorHint="#abcdefff"
+        android:listSelector="#cdefabdc">
+        <!--       android:cacheColorHint="#00000000"，这个设置拖动view时背景色
+              android:listSelector="#00000000" ，设置选中时的底色 -->
+    </ListView>
+
+</FrameLayout>

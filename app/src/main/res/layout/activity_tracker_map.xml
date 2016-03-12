@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.srmn.xwork.gpstoolkit.TrackerMap">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1pt"
+                android:background="@drawable/bg_text"
+                android:orientation="vertical"
+                android:padding="2pt">
+
+                <TextView
+                    android:id="@+id/txtStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="卫星数"
+                    android:textColor="@color/c_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="0"
+                    android:textColor="@color/c_white" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1pt"
+                android:layout_weight="1"
+                android:background="@drawable/bg_text"
+                android:orientation="vertical"
+                android:padding="2pt">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="正在连接GPS卫星"
+                    android:textColor="@color/c_white" />
+
+                <TextView
+                    android:id="@+id/txtTrackerStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="0.0,0.0,0"
+                    android:textColor="@color/c_white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1pt"
+                android:background="@drawable/bg_text"
+                android:orientation="vertical"
+                android:padding="2pt">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="时间"
+                    android:textColor="@color/c_white" />
+
+                <TextView
+                    android:id="@+id/txtTrackerTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="3:51'00''"
+                    android:textColor="@color/c_white" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1pt"
+                android:background="@drawable/bg_text"
+                android:orientation="vertical"
+                android:padding="2pt">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="线路长度"
+                    android:textColor="@color/c_white" />
+
+                <TextView
+                    android:id="@+id/txtTrackerLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="1pt"
+                    android:text="12.23km"
+                    android:textColor="@color/c_white" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp">
+
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="25pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="1pt"
+            android:background="#5f000000"
+            android:text="开始"
+            android:textColor="@color/c_white" />
+
+
+        <Button
+            android:id="@+id/btnEnd"
+            android:layout_width="25pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="1pt"
+            android:background="#5f000000"
+            android:text="结束"
+            android:textColor="@color/c_white" />
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="25pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="1pt"
+            android:background="#5f000000"
+            android:text="上传"
+            android:textColor="@color/c_white" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

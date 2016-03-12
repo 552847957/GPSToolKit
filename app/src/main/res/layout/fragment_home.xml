@@ -1,0 +1,237 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.srmn.xwork.gpstoolkit.HomeFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical">
+
+                <com.beardedhen.androidbootstrap.AwesomeTextView
+                    android:id="@+id/iconStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:textSize="50sp"
+                    android:visibility="visible"
+                    app:bootstrapBrand="success"
+                    app:fontAwesomeIcon="fa_refresh"
+
+                    />
+
+
+                <com.beardedhen.androidbootstrap.AwesomeTextView
+                    android:id="@+id/iconStatus1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:textSize="50sp"
+                    android:visibility="gone"
+                    app:bootstrapBrand="success"
+                    app:fontAwesomeIcon="fa_refresh"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txtConectText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="连接中"
+                    android:textColor="@color/c_white"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtlat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="纬度：28.299998"
+                    android:textColor="@color/c_white"></TextView>
+
+                <TextView
+                    android:id="@+id/txtlng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="经度：112.199998"
+                    android:textColor="@color/c_white"></TextView>
+
+                <TextView
+                    android:id="@+id/txtaltaccuracy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="海拔：0.0 m  精度:±365.93米"
+                    android:textColor="@color/c_white"></TextView>
+
+                <TextView
+                    android:id="@+id/txtaddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="中国湖南省长沙市宁乡县老粮仓镇"></TextView>
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/c_dark_blue"></RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txtGPSConnectInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在等待GPS进行校准"
+                        android:textColor="@color/c_white"
+                        android:textSize="13sp"></TextView>
+
+                    <com.beardedhen.androidbootstrap.AwesomeTextView
+                        android:id="@+id/iconGPSStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:fontAwesomeIcon="fa_rss"
+
+                        />
+
+                    <com.beardedhen.androidbootstrap.AwesomeTextView
+                        android:id="@+id/iconGPSStatus1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        app:fontAwesomeIcon="fa_rss"
+
+                        />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/txtGPSFindSatellitesInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="发现卫星数量(0颗)"
+                    android:textColor="@color/c_white"
+                    android:textSize="13sp"></TextView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgGPSConnectSatellitesInfo"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="right"
+                    android:src="@drawable/ic_settings_input_antenna_grey600_18dp" />
+
+                <TextView
+                    android:id="@+id/txtGPSConnectSatellitesInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="已校准：0颗"
+                    android:textColor="@color/c_white"
+                    android:textSize="13sp"></TextView>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/gvMainNav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/c_light_grey"
+            android:columnWidth="90dp"
+            android:gravity="center_vertical"
+            android:horizontalSpacing="15dp"
+            android:numColumns="auto_fit"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="6dp"></GridView>
+
+    </LinearLayout>
+
+
+</FrameLayout>
