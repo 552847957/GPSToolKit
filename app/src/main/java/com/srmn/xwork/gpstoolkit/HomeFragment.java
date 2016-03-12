@@ -155,8 +155,6 @@ public class HomeFragment extends BaseFragment {
                 break;
 
             case 7:
-
-
                 break;
             case 8:
 
