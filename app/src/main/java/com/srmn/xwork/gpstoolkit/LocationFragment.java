@@ -186,6 +186,7 @@ public class LocationFragment extends BaseFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
+
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) parentActivity
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
