@@ -4,7 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,16 +18,29 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.GISLocationService;
 import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
+import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.ServiceUtil;
+import com.srmn.xwork.androidlib.utils.StringUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.App.MyApplication;
+import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
+import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 @ContentView(R.layout.activity_tracker_map)
@@ -51,16 +67,72 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
     protected TextView txtTrackerStatus;
     @ViewInject(R.id.txtTrackerLocationInfo)
     protected TextView txtTrackerLocationInfo;
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
 
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
     private MapView mapView;
-
     private com.amap.api.maps.AMap aMap;
+    private RouterPath routerPath;
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
 
-    private MyReceiver receiver = null;
+                if (!getMyApp().getStackerIsStart()) {
+                    return;
+                }
+                routerPath = getMyApp().getCurrentTackerPath();
 
+                if (routerPath == null)
+                    return;
+
+                getMyApp().UpdateRouterPathItemInfo(routerPath);
+
+                txtTrackerTime.setText(StringUtil.formatTime(routerPath.getTimeCount()));
+                txtTrackerLength.setText(StringUtil.formatDistance(routerPath.getDistance()));
+                if (routerPath.getItems().size() < 2) {
+                    return;
+                }
+                List<LatLng> points = new ArrayList<LatLng>();
+                LatLngBounds.Builder build = new LatLngBounds.Builder();
+
+                for (RouterPathItem item : routerPath.getItems()) {
+                    points.add(new LatLng(item.getLatitude(), item.getLongitude()));
+                    build.include(new LatLng(item.getLatitude(), item.getLongitude()));
+                }
+
+                aMap.clear();
+
+                aMap.addMarker(new MarkerOptions()
+                        .position(points.get(0))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+
+                aMap.addMarker(new MarkerOptions()
+                        .position(points.get(points.size() - 1))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+
+                Polyline polyline = aMap.addPolyline((new PolylineOptions())
+                        .addAll(points).color(Color.BLUE));
+
+                // 移动地图，所有marker自适应显示。LatLngBounds与地图边缘10像素的填充区域
+                aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build.build(), 10));
+
+
+            }
+            super.handleMessage(msg);
+        }
+
+        ;
+    };
     private GISLocation currentLocation;
     private GISSatelliteStatus gisSatelliteStatus;
-
     private MyGPSReceiver gpsReceiver = null;
 
     @Override
@@ -70,8 +142,24 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         hideActionBar();
 
-        btnStart.setVisibility(View.VISIBLE);
-        btnEnd.setVisibility(View.VISIBLE);
+
+        Intent intent = getIntent();
+
+        if (intent.hasExtra("location")) {
+            currentLocation = (GISLocation) intent.getSerializableExtra("location");
+
+            txtTrackerLocationInfo.setText(currentLocation.toLocationInfo());
+        }
+
+
+        if (getMyApp().getStackerIsStart()) {
+            btnStart.setVisibility(View.GONE);
+            btnEnd.setVisibility(View.VISIBLE);
+        } else {
+            btnStart.setVisibility(View.VISIBLE);
+            btnEnd.setVisibility(View.GONE);
+        }
+
         btnUpload.setVisibility(View.GONE);
 
         btnStart.setOnClickListener(this);
@@ -80,6 +168,10 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
             aMap = mapView.getMap();
             initMap();
         }
+
+        timer.schedule(task, 5000, 10000); // 10s后执行task,经过10s再次执行
+
+
     }
 
     private void initMap() {
@@ -93,18 +185,23 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
+        aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+            @Override
+            public void onMapLoaded() {
+
+
+                if (currentLocation != null) {
+                    LatLng centerPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+                    moveToCenter(centerPosition);
+                }
+
+            }
+        });
+
+
         //使用Intent对象得到FirstActivity传递来的参数
-        Intent intent = getIntent();
 
-        if (intent.hasExtra("location")) {
-
-            GISLocation location = (GISLocation) intent.getSerializableExtra("location");
-
-            LatLng centerPosition = new LatLng(location.getLatitude(), location.getLongitude());
-
-            moveToCenter(centerPosition);
-
-        }
     }
 
     private void moveToCenter(LatLng centerPosition) {
@@ -150,24 +247,31 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        if (timer != null)
+            timer.cancel();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        receiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MyApplication.INTENAL_ACTION_NEWTRACKERITEM);
-        registerReceiver(receiver, filter);
+
+        gpsReceiver = new MyGPSReceiver();
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(GISLocationService.SERVICE_NAME);
+        registerReceiver(gpsReceiver, filter1);
+
+
+
     }
     //注册广播接收器
 
     @Override
     public void onStop() {
         super.onStop();
-        if (receiver == null) {
-            unregisterReceiver(receiver);
+        if (gpsReceiver == null) {
+            unregisterReceiver(gpsReceiver);
         }
+
     }
 
 
@@ -180,6 +284,8 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
                     return;
                 }
                 getMyApp().startNewTracePath();
+                btnStart.setVisibility(View.GONE);
+                btnEnd.setVisibility(View.VISIBLE);
                 break;
             case R.id.btnEnd:
                 if (!getMyApp().getStackerIsStart()) {
@@ -187,6 +293,7 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
                     return;
                 }
                 getMyApp().endCurrentTracePath();
+                finish();
                 break;
         }
 
@@ -194,21 +301,7 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
     }
 
 
-    /**
-     * 获取广播数据
-     *
-     * @author jiqinlin
-     */
-    public class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
 
-            //Bundle bundle=intent.getExtras();
-
-            Log.i(TAG, "检测到新的点。");
-
-        }
-    }
 
     /**
      * 获取广播数据

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,13 +15,16 @@ import android.widget.TextView;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.GISLocationService;
 import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
+import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.DeviceUtils;
 import com.srmn.xwork.androidlib.utils.ServiceUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
@@ -31,7 +36,10 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by kiler on 2016/3/12.
@@ -66,13 +74,13 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     private com.amap.api.maps.AMap aMap;
     private RouterPath routerPath;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         hideActionBar();
+
 
         btnStart.setVisibility(View.GONE);
         btnEnd.setVisibility(View.GONE);
@@ -84,6 +92,8 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
             aMap = mapView.getMap();
             initMap();
         }
+
+
     }
 
 
@@ -124,6 +134,14 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
                         build.include(new LatLng(item.getLatitude(), item.getLongitude()));
                     }
 
+                    aMap.addMarker(new MarkerOptions()
+                            .position(points.get(0))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+
+                    aMap.addMarker(new MarkerOptions()
+                            .position(points.get(points.size() - 1))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+
 
                     Polyline polyline = aMap.addPolyline((new PolylineOptions())
                             .addAll(points).color(Color.BLUE));
@@ -147,6 +165,8 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+//        timer = new Timer();
+//        timer.schedule(task, 10000, 10000); // 10s后执行task,经过10s再次执行
     }
 
     /**
@@ -156,6 +176,8 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     protected void onPause() {
         super.onPause();
         mapView.onPause();
+//        if(timer!=null)
+//            timer.cancel();
     }
 
     /**

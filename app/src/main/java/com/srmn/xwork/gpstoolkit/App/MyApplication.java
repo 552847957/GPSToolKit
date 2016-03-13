@@ -237,7 +237,7 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
         }
     }
 
-    private void UpdateRouterPathItemInfo(RouterPath routerPath) {
+    public void UpdateRouterPathItemInfo(RouterPath routerPath) {
 
         List<RouterPathItem> subItems = getDaos().getRouterPathItemDaoInstance().findAllByRouterPathId(routerPath.getId());
 
@@ -272,6 +272,9 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
         SharedPrefsUtil.putStringValue(GPS_TOOL_KIT, KEY_CURRENT_TACKER_PATH_CODE, currentTackerPathCode);
     }
 
+    public RouterPath getCurrentTackerPath() {
+        return getDaos().getRouterPathDaoInstance().findByCode(getCurrentTackerPathCode());
+    }
 
     /**
      * 获取广播数据
