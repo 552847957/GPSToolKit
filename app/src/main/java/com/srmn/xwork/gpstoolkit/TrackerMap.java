@@ -68,16 +68,6 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
     @ViewInject(R.id.txtTrackerLocationInfo)
     protected TextView txtTrackerLocationInfo;
     Timer timer = new Timer();
-    TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            // 需要做的事:发送消息
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
-        }
-    };
     private MapView mapView;
     private com.amap.api.maps.AMap aMap;
     private RouterPath routerPath;
@@ -112,11 +102,11 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
 
                 aMap.addMarker(new MarkerOptions()
                         .position(points.get(0))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start64)));
 
                 aMap.addMarker(new MarkerOptions()
                         .position(points.get(points.size() - 1))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end64)));
 
                 Polyline polyline = aMap.addPolyline((new PolylineOptions())
                         .addAll(points).color(Color.BLUE));
@@ -130,6 +120,16 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
         }
 
         ;
+    };
+    TimerTask task = new TimerTask() {
+
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
     };
     private GISLocation currentLocation;
     private GISSatelliteStatus gisSatelliteStatus;

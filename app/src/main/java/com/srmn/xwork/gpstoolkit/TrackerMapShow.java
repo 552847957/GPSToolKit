@@ -136,11 +136,11 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
 
                     aMap.addMarker(new MarkerOptions()
                             .position(points.get(0))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.start64)));
 
                     aMap.addMarker(new MarkerOptions()
                             .position(points.get(points.size() - 1))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.end64)));
 
 
                     Polyline polyline = aMap.addPolyline((new PolylineOptions())
