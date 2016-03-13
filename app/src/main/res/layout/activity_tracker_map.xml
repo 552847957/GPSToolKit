@@ -40,6 +40,7 @@
                     android:textColor="@color/c_white" />
 
                 <TextView
+                    android:id="@+id/txtSatelliteCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -60,6 +61,7 @@
                 android:padding="2pt">
 
                 <TextView
+                    android:id="@+id/txtTrackerStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -68,7 +70,7 @@
                     android:textColor="@color/c_white" />
 
                 <TextView
-                    android:id="@+id/txtTrackerStatus"
+                    android:id="@+id/txtTrackerLocationInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

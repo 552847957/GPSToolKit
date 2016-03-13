@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -37,11 +38,30 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
     @ViewInject(R.id.btnUpload)
     protected Button btnUpload;
 
+
+    @ViewInject(R.id.txtTrackerTime)
+    protected TextView txtTrackerTime;
+    @ViewInject(R.id.txtTrackerLength)
+    protected TextView txtTrackerLength;
+
+
+    @ViewInject(R.id.txtSatelliteCount)
+    protected TextView txtSatelliteCount;
+    @ViewInject(R.id.txtTrackerStatus)
+    protected TextView txtTrackerStatus;
+    @ViewInject(R.id.txtTrackerLocationInfo)
+    protected TextView txtTrackerLocationInfo;
+
     private MapView mapView;
 
     private com.amap.api.maps.AMap aMap;
 
     private MyReceiver receiver = null;
+
+    private GISLocation currentLocation;
+    private GISSatelliteStatus gisSatelliteStatus;
+
+    private MyGPSReceiver gpsReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,4 +209,32 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
 
         }
     }
+
+    /**
+     * 获取广播数据
+     *
+     * @author jiqinlin
+     */
+    public class MyGPSReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+
+            if (bundle.containsKey(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION)) {
+                currentLocation = (GISLocation) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION);
+                txtTrackerLocationInfo.setText(currentLocation.toLocationInfo());
+
+            } else if (bundle.containsKey(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS)) {
+                gisSatelliteStatus = (GISSatelliteStatus) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS);
+                txtSatelliteCount.setText(gisSatelliteStatus.getConnnectSatellites() + "");
+                if (gisSatelliteStatus.getConnnectSatellites() <= 0) {
+                    txtTrackerStatus.setText("GPS卫星连接中...");
+                } else {
+                    txtTrackerStatus.setText("GPS卫星已连接。");
+                }
+            }
+
+        }
+    }
+
 }

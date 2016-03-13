@@ -1,6 +1,9 @@
 package com.srmn.xwork.gpstoolkit;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +17,11 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
+import com.srmn.xwork.androidlib.gis.GISLocation;
+import com.srmn.xwork.androidlib.gis.GISLocationService;
+import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
 import com.srmn.xwork.androidlib.utils.DeviceUtils;
+import com.srmn.xwork.androidlib.utils.ServiceUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
@@ -46,9 +53,19 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     @ViewInject(R.id.txtTrackerLength)
     protected TextView txtTrackerLength;
 
+
+    @ViewInject(R.id.txtSatelliteCount)
+    protected TextView txtSatelliteCount;
+    @ViewInject(R.id.txtTrackerStatus)
+    protected TextView txtTrackerStatus;
+    @ViewInject(R.id.txtTrackerLocationInfo)
+    protected TextView txtTrackerLocationInfo;
+
+
     private MapView mapView;
     private com.amap.api.maps.AMap aMap;
     private RouterPath routerPath;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +85,7 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
             initMap();
         }
     }
+
 
     private void initMap() {
 
@@ -93,7 +111,6 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
                 showShortToastMessage("轨迹点少于2个不显示");
                 return;
             }
-
 
             aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
                 @Override
@@ -162,12 +179,14 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
+
     }
     //注册广播接收器
 
     @Override
     public void onStop() {
         super.onStop();
+
     }
 
     @Override

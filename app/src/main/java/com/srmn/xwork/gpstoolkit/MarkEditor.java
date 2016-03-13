@@ -1,13 +1,15 @@
 package com.srmn.xwork.gpstoolkit;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,13 +29,18 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.media.PhotoAction;
+import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.ImageUtil;
+import com.srmn.xwork.androidlib.utils.StringUtil;
+import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.Dao.MarkerCategoryDao;
 import com.srmn.xwork.gpstoolkit.Dao.MarkerDao;
 import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
+import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 
 import org.xutils.ex.DbException;
 import org.xutils.image.ImageOptions;
@@ -63,8 +71,8 @@ public class MarkEditor extends BaseActivity {
     @ViewInject(R.id.txtRemark)
     protected TextView txtRemark;
 
-    @ViewInject(R.id.lstImages)
-    protected RecyclerView lstImages;
+
+    protected ListView lstImages;
     @ViewInject(R.id.llPhoto)
     protected LinearLayout llPhoto;
 
@@ -117,6 +125,8 @@ public class MarkEditor extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        lstImages = (ListView) findViewById(R.id.lstImages);
 
         photoAction = new PhotoAction(this);
 
@@ -302,12 +312,11 @@ public class MarkEditor extends BaseActivity {
 
     private void reloadImages() {
 
-        markerImagesAdapter = new MarkerImagesAdapter(MarkEditor.this, loadPics);
+        markerImagesAdapter = new MarkerImagesAdapter(MarkEditor.this, R.layout.list_image_item, loadPics);
         lstImages.setAdapter(markerImagesAdapter);
         markerImagesAdapter.notifyDataSetChanged();
 
-
-//        UIUtil.setListViewHeigth(markerImagesAdapter, lstImages);
+        UIUtil.setListViewHeigth(markerImagesAdapter, lstImages);
 
     }
 
@@ -339,120 +348,92 @@ public class MarkEditor extends BaseActivity {
         client.disconnect();
     }
 
+    class MarkerImagesAdapter extends BaseArrayAdapter<String> {
 
-    class MarkerImagesAdapter extends RecyclerView.Adapter<MarkerImagesAdapter.ViewHolder> {
-
-        private List<String> mItems;
-
-        public MarkerImagesAdapter(Context context, List<String> items) {
-            mItems = items;
-        }
-
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            int layout = -1;
-            switch (viewType) {
-                default:
-                    layout = R.layout.list_image_item;
-                    break;
-            }
-            View v = LayoutInflater
-                    .from(context)
-                    .inflate(layout, parent, false);
-            return new ViewHolder(v);
+        public MarkerImagesAdapter(Context context, int resource, List<String> objects) {
+            super(context, resource, objects);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            String filePath = mItems.get(position);
-            holder.setImage(filePath);
+        public View getView(int position, View convertView, ViewGroup parent) {
 
-        }
+            final String obj = (String) getItem(position);
+            final int cindex = position;
+            View view;
+            ViewHolder viewHolder;
 
-        @Override
-        public int getItemCount() {
-            return mItems.size();
-        }
-
-
-//        public MarkerImagesAdapter(Context context, int resource, List<String> objects) {
-//            super(context, resource, objects);
-//
-//
-//
-//
-//
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//
-//            String filePath = (String) getItem(position);
-//
-//            View view;
-//            ViewHolder viewHolder;
-//
-//            if (convertView == null) {
-//                view = LayoutInflater.from(context).inflate(layoutID, null);
-//                viewHolder = new ViewHolder();
-//                viewHolder.imgListImage = (ImageView) view.findViewById(R.id.imgListImage);
-//                view.setTag(viewHolder);
-//            } else {
-//                view = convertView;
-//                viewHolder = (ViewHolder) view.getTag();
-//            }
-//
-////            FileInputStream fis = null;
-////            try {
-////                fis = new FileInputStream(filePath);
-////                Bitmap bitmap  = BitmapFactory.decodeStream(fis);
-////
-////                viewHolder.imgListImage.setImageBitmap(bitmap);
-////            } catch (FileNotFoundException e) {
-////                e.printStackTrace();
-////            }
-//
-//
-//            //imgListImage
-//
-//
-//
-//            return view;
-//        }
+            if (convertView == null) {
+                view = LayoutInflater.from(context).inflate(layoutID, null);
+                viewHolder = new ViewHolder();
+                viewHolder.imgListImage = (ImageView) view.findViewById(R.id.imgListImage);
+                viewHolder.btnDelete = (ImageView) view.findViewById(R.id.btnDelete);
 
 
-        class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageView imgListImage;
-
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-
-                imgListImage = (ImageView) itemView.findViewById(R.id.imgListImage);
-
+                view.setTag(viewHolder);
+            } else {
+                view = convertView;
+                viewHolder = (ViewHolder) view.getTag();
             }
 
-            public void setImage(String filePath) {
+            if (null == viewHolder.imgListImage)
+                return view;
 
-                ImageOptions imageOptions = new ImageOptions.Builder()
-                        // 如果ImageView的大小不是定义为wrap_content, 不要crop.
-                        .setCrop(true) // 很多时候设置了合适的scaleType也不需要它.
-                        // 加载中或错误图片的ScaleType
-                        //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                        .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                        .setLoadingDrawableId(R.mipmap.ic_launcher)
-                        .setFailureDrawableId(R.mipmap.ic_launcher)
-                        .build();
+            ImageOptions imageOptions = new ImageOptions.Builder()
+                    // 如果ImageView的大小不是定义为wrap_content, 不要crop.
+                    .setCrop(true) // 很多时候设置了合适的scaleType也不需要它.
+                    // 加载中或错误图片的ScaleType
+                    //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                    .setLoadingDrawableId(R.mipmap.ic_launcher)
+                    .setFailureDrawableId(R.mipmap.ic_launcher)
+                    .build();
 
-                if (null == imgListImage) return;
-                x.image().bind(imgListImage, filePath, imageOptions);
-            }
+            x.image().bind(viewHolder.imgListImage, obj, imageOptions);
 
 
+            viewHolder.imgListImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    File file = new File(obj);
+
+                    if (!file.exists()) {
+                        showShortToastMessage("图片不存在.");
+                        return;
+                    }
+
+                    Intent it = new Intent(Intent.ACTION_VIEW);
+                    Uri mUri = Uri.parse("file://" + file.getPath());
+                    it.setDataAndType(mUri, "image/*");
+                    startActivity(it);
+                }
+            });
+
+            viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    UIUtil.showConfrim(context, "确定确认", "确定删除该图片？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            IOUtil.deleteFile(obj);
+                            loadPics.remove(cindex);
+                            reloadImages();
+                            showShortToastMessage("删除图片成功！");
+                        }
+                    });
+
+
+                }
+            });
+
+            return view;
         }
 
-
+        class ViewHolder {
+            public ImageView imgListImage;
+            public ImageView btnDelete;
+        }
     }
 
 
