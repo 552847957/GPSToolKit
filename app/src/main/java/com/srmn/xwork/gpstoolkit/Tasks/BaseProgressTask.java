@@ -26,13 +26,15 @@ public abstract class BaseProgressTask<E> extends AsyncTask<E, Integer, E> {
     protected String progressMessage;
     private String title;
     private String startMessage;
+    private int iconID;
 
 
-    public BaseProgressTask(Context context, String title, String startMessage, String progressMessage) {
+    public BaseProgressTask(Context context, String title, String startMessage, String progressMessage, int iconID) {
         this.context = context;
         this.title = title;
         this.startMessage = startMessage;
         this.progressMessage = progressMessage;
+        this.iconID = iconID;
     }
 
     @Override
@@ -67,6 +69,7 @@ public abstract class BaseProgressTask<E> extends AsyncTask<E, Integer, E> {
         super.onCancelled();
     }
 
+
     @Override
     protected void onPreExecute() {
 
@@ -74,6 +77,7 @@ public abstract class BaseProgressTask<E> extends AsyncTask<E, Integer, E> {
         pgDialog.setIndeterminate(false);
         pgDialog.setTitle(title);
         pgDialog.setMessage(startMessage);
+        pgDialog.setIcon(iconID);
         pgDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pgDialog.setProgress(0);
         pgDialog.setMax(100);

@@ -10,6 +10,7 @@ import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
+import com.srmn.xwork.gpstoolkit.R;
 
 /**
  * Created by kiler on 2016/3/23.
@@ -19,7 +20,7 @@ public class SaveRouterPathTask extends BaseProgressTask<RouterPath> {
     public static final String TAG = "SaveRouterPathTask";
 
     public SaveRouterPathTask(Context context, String title, String startMessage, String progressMessage) {
-        super(context, title, startMessage, progressMessage);
+        super(context, title, startMessage, progressMessage, R.drawable.ic_file_upload_grey600_36dp);
     }
 
     @Override
