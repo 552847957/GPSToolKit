@@ -48,6 +48,9 @@ public class SaveRouterPathTask extends BaseProgressTask<RouterPath> {
 
             saveRouterPath.setObjID(routerPathClould.getObjectId());
 
+            if (this.isCancelled())
+                return saveRouterPath;
+
             for (RouterPathItem routerPathItem : saveRouterPath.getItems()) {
                 AVObject routerPathItemClould = MyApplication.getInstance().getCloudDb().convertRouterPathItemToClould(routerPathItem);
 
@@ -61,6 +64,9 @@ public class SaveRouterPathTask extends BaseProgressTask<RouterPath> {
                 i++;
 
                 publishProgress(i * 100 / totalTaskCount, i, totalTaskCount);
+
+                if (this.isCancelled())
+                    return saveRouterPath;
 
 
             }

@@ -78,28 +78,18 @@ public abstract class BaseProgressTask<E> extends AsyncTask<E, Integer, E> {
         pgDialog.setProgress(0);
         pgDialog.setMax(100);
 
-        pgDialog.setCancelable(true);// 设置是否可以通过点击Back键取消
+        pgDialog.setCancelable(false);// 设置是否可以通过点击Back键取消
         pgDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
-        pgDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                UIUtil.showConfrim(context, "确认信息", "确定取消上传任务？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        cancel(true);
-                    }
-                });
-            }
-        });
+
         pgDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                UIUtil.showConfrim(context, "确认信息", "确定取消上传任务？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+//                UIUtil.showConfrim(context, "确认信息", "确定取消上传任务？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
                         cancel(true);
-                    }
-                });
+//                    }
+//                });
             }
         });
 
