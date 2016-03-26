@@ -31,6 +31,7 @@ import com.srmn.xwork.androidlib.utils.StringUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
+import com.srmn.xwork.gpstoolkit.Tasks.SaveRouterPathTask;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -165,8 +166,6 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-//        timer = new Timer();
-//        timer.schedule(task, 10000, 10000); // 10s后执行task,经过10s再次执行
     }
 
     /**
@@ -176,8 +175,6 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-//        if(timer!=null)
-//            timer.cancel();
     }
 
     /**
@@ -226,7 +223,10 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
                     return;
                 }
 
-                getMyApp().getCloudDbAccess().cloudUpdateRouterPath(routerPath);
+
+                SaveRouterPathTask saveRouterPathTask = new SaveRouterPathTask(this, "上传数据", "开始上传数据", "数据上传中%s");
+
+                saveRouterPathTask.execute(routerPath);
 
                 break;
         }

@@ -73,7 +73,9 @@
             android:screenOrientation="portrait" />
         <activity android:name=".TrackerMap"></activity>
         <activity android:name=".TrackerMapShow"></activity>
-
+        <!-- 反馈组件（若使用该功能，需添加以下声明）START -->
+        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity"></activity>
+        <!-- 反馈组件 END -->
 
     </application>
 

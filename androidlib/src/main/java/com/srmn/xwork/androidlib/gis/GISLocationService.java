@@ -1,5 +1,7 @@
 package com.srmn.xwork.androidlib.gis;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.LocationManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 
 import com.amap.api.location.AMapLocation;
@@ -44,12 +47,26 @@ public class GISLocationService extends Service implements AMapLocationListener 
             updateGpsStatus(event, status);
         }
     };
+    private AlarmManager am;
+    //  private WakeReceiver wakeReceiver;
+    private PendingIntent pi;
     //声明AMapLocationClient类对象
     private AMapLocationClient mLocationClient = null;
+    private PowerManager pm;
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     public void onCreate() {
+
         super.onCreate();
+
+        //唤醒锁，防止息屏
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, SERVICE_NAME);
+        wakeLock.acquire();
+
+
+
         //初始化定位参数
         AMapLocationClientOption locationOption = new AMapLocationClientOption();
         //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
@@ -137,6 +154,11 @@ public class GISLocationService extends Service implements AMapLocationListener 
             //销毁定位客户端。
             mLocationClient.onDestroy();
         }
+
+        //释放唤醒锁
+        if (wakeLock == null)
+            return;
+        wakeLock.release();
     }
 
 

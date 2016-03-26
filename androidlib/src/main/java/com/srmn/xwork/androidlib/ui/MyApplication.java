@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.amap.api.maps.MapsInitializer;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
+import com.srmn.xwork.androidlib.utils.UIUtil;
 
 import org.xutils.x;
 
@@ -46,10 +47,12 @@ public class MyApplication extends Application {
 
 
     public void showShortToastMessage(String message) {
-        Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        UIUtil.showShortToastMessage(this.getApplicationContext(), message);
     }
 
     public void showLongToastMessage(String message) {
-        Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        UIUtil.showLongToastMessage(this.getApplicationContext(), message);
     }
+
+
 }

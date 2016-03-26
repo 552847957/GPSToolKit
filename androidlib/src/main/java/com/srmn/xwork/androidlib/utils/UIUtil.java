@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.srmn.xwork.androidlib.R;
 
@@ -41,5 +42,14 @@ public class UIUtil {
                 setNegativeButton(canelBtnName, null).
                 create();
         alertDialog.show();
+    }
+
+
+    public static void showShortToastMessage(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showLongToastMessage(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 }

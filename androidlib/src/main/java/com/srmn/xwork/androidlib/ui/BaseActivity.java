@@ -9,6 +9,8 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 
+import com.srmn.xwork.androidlib.utils.UIUtil;
+
 import org.xutils.x;
 
 
@@ -28,11 +30,11 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public void showShortToastMessage(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        UIUtil.showShortToastMessage(context, message);
     }
 
     public void showLongToastMessage(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        UIUtil.showLongToastMessage(context, message);
     }
 
 

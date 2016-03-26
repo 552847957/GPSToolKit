@@ -8,6 +8,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
+import com.genymotion.api.GenymotionManager;
+import com.genymotion.api.Gps;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.GISLocationService;
 import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
@@ -16,12 +22,11 @@ import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.NumberUtil;
 import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
-import com.srmn.xwork.gpstoolkit.Bombs.CloudDbAccess;
-import com.srmn.xwork.gpstoolkit.Bombs.RouterPathBmobObject;
 import com.srmn.xwork.gpstoolkit.Dao.DaoContainer;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
 import com.srmn.xwork.gpstoolkit.HomeFragment;
+import com.srmn.xwork.gpstoolkit.Leancloud.LeancloudDb;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -30,8 +35,6 @@ import org.xutils.x;
 import java.util.Date;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by kiler on 2016/2/20.
@@ -48,16 +51,14 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
 
     protected DbManager dbmanager;
     protected DaoContainer daoContainer;
-    protected CloudDbAccess cloudDbAccess;
+    protected LeancloudDb cloudDb;
     private MyGSPReceiver receiver = null;
 
     public static MyApplication getInstance() {
         return (MyApplication) instance;
     }
 
-    public CloudDbAccess getCloudDbAccess() {
-        return cloudDbAccess;
-    }
+
 
     @Override
     public void onCreate() {
@@ -89,8 +90,10 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
 
         dbmanager = x.getDb(daoConfig);
         daoContainer = new DaoContainer(dbmanager);
-        cloudDbAccess = new CloudDbAccess(this);
-        Bmob.initialize(this, "cc2266f1ff45c7b5adc7ed982fc1104d");
+        cloudDb = new LeancloudDb();
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this, "9w01o4npGayJCHiK3vfCydaR-gzGzoHsz", "2q5PYy06gViPpv2VfALvW4xt");
+
 
         //注册广播接收器
         receiver = new MyGSPReceiver();
@@ -109,6 +112,10 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
 
     public DaoContainer getDaos() {
         return daoContainer;
+    }
+
+    public LeancloudDb getCloudDb() {
+        return cloudDb;
     }
 
     public boolean getStackerIsStart() {
