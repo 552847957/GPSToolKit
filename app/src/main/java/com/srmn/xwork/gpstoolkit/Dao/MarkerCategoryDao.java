@@ -35,6 +35,7 @@ public class MarkerCategoryDao extends BaseDao<MarkerCategory> {
             if (markerCategory == null)
                 return 1;
 
+
             return markerCategory.getId() + 1;
 
 
