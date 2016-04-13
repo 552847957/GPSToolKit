@@ -1,11 +1,13 @@
 package com.srmn.xwork.gpstoolkit.Dao;
 
+import com.srmn.xwork.androidlib.db.IDaoContainer;
+
 import org.xutils.DbManager;
 
 /**
  * Created by kiler on 2016/2/20.
  */
-public class DaoContainer {
+public class DaoContainer implements IDaoContainer {
 
     private DbManager _db;
 

@@ -1,6 +1,6 @@
 package com.srmn.xwork.gpstoolkit.Dao;
 
-import com.srmn.xwork.gpstoolkit.Entities.Marker;
+import com.srmn.xwork.androidlib.db.BaseDao;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
 import org.xutils.DbManager;
@@ -18,8 +18,12 @@ public class MarkerCategoryDao extends BaseDao<MarkerCategory> {
         super(db, daoContainer);
     }
 
+    public DaoContainer getDaoContainerInstance() {
+        return (DaoContainer) this.dao;
+    }
+
     @Override
-    String getPkName() {
+    public String getPkName() {
         return "id";
     }
 
@@ -49,7 +53,7 @@ public class MarkerCategoryDao extends BaseDao<MarkerCategory> {
         }
 
         for (MarkerCategory markerCategory : entities) {
-            markerCategory.setMarkers(dao.getMarkerDaoInstance().queryByCategoryID(markerCategory.getId()));
+            markerCategory.setMarkers(getDaoContainerInstance().getMarkerDaoInstance().queryByCategoryID(markerCategory.getId()));
         }
 
         return entities;

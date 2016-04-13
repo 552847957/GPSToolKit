@@ -1,7 +1,7 @@
 package com.srmn.xwork.gpstoolkit.Dao;
 
+import com.srmn.xwork.androidlib.db.BaseDao;
 import com.srmn.xwork.gpstoolkit.Entities.Marker;
-import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -19,7 +19,7 @@ public class MarkerDao extends BaseDao<Marker> {
     }
 
     @Override
-    String getPkName() {
+    public String getPkName() {
         return "id";
     }
 

@@ -3,13 +3,16 @@ package com.srmn.xwork.androidlib.gis;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.LocationManager;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 
 import com.amap.api.location.AMapLocation;
@@ -33,6 +36,7 @@ public class GISLocationService extends Service implements AMapLocationListener 
     public static final String INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION = "INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION";
     public static final String INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS = "INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS";
     public static final String SERVICE_NAME = "com.srmn.xwork.androidlib.gis.GISLocationService";
+    public static final String REPEATING = "repeating";
     private LocationManager locationManager;
     private List<GpsSatellite> numSatelliteList = new ArrayList<GpsSatellite>(); // 卫星信号
     private int maxSatellites = 0;
@@ -54,18 +58,56 @@ public class GISLocationService extends Service implements AMapLocationListener 
     private AMapLocationClient mLocationClient = null;
     private PowerManager pm;
     private PowerManager.WakeLock wakeLock;
+    private LocationReceiver locationReceiver;
 
     @Override
     public void onCreate() {
 
         super.onCreate();
+        initLocation();
+
+        if (am != null && pi != null) {
+            am.cancel(pi);
+        }
+
+        IntentFilter intentFile = new IntentFilter();
+        intentFile.addAction(REPEATING);
+        locationReceiver = new LocationReceiver();
+        registerReceiver(locationReceiver, intentFile);
+        Intent intent = new Intent();
+        intent.setAction(REPEATING);
+        pi = PendingIntent.getBroadcast(this, 0, intent, 0);
+        am = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        long time = SystemClock.currentThreadTimeMillis();
+        am.cancel(pi);
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, time, 1000 * 60 * 6, pi); //每6分钟发起一次定位重置
+
+
+    }
+
+    private void initLocation() {
+
+
+        // 在Service销毁的时候销毁定位资源
+        if (mLocationClient != null) {
+            mLocationClient.unRegisterLocationListener(this);
+            //停止定位
+            mLocationClient.stopLocation();
+            //销毁定位客户端。
+            mLocationClient.onDestroy();
+        }
+
+        //释放唤醒锁
+        if (wakeLock != null) {
+            wakeLock.release();
+        }
+
 
         //唤醒锁，防止息屏
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, SERVICE_NAME);
         wakeLock.acquire();
-
-
 
         //初始化定位参数
         AMapLocationClientOption locationOption = new AMapLocationClientOption();
@@ -95,7 +137,6 @@ public class GISLocationService extends Service implements AMapLocationListener 
         locationManager = ((LocationManager) MyApplication.getContext().getSystemService(Context.LOCATION_SERVICE));
 
         locationManager.addGpsStatusListener(statusListener);
-
     }
 
     private void updateGpsStatus(int event, GpsStatus status) {
@@ -161,11 +202,18 @@ public class GISLocationService extends Service implements AMapLocationListener 
         wakeLock.release();
     }
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    class LocationReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+
     }
 
 }

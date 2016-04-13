@@ -1,6 +1,6 @@
 package com.srmn.xwork.gpstoolkit.Dao;
 
-import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
+import com.srmn.xwork.androidlib.db.BaseDao;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
 
 import org.xutils.DbManager;
@@ -18,7 +18,7 @@ public class RouterPathItemDao extends BaseDao<RouterPathItem> {
     }
 
     @Override
-    String getPkName() {
+    public String getPkName() {
         return "id";
     }
 

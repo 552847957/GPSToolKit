@@ -1,6 +1,5 @@
-package com.srmn.xwork.gpstoolkit.Dao;
+package com.srmn.xwork.androidlib.db;
 
-import com.srmn.xwork.gpstoolkit.Entities.Marker;
 
 import org.xutils.DbManager;
 import org.xutils.db.Selector;
@@ -18,16 +17,16 @@ public abstract class BaseDao<E> {
 
     protected Class<E> entityClass;
     protected DbManager _db;
-    protected DaoContainer dao;
+    protected IDaoContainer dao;
 
 
-    public BaseDao(DbManager db, DaoContainer daoContainer) {
+    public BaseDao(DbManager db, IDaoContainer daoContainer) {
         this._db = db;
         this.dao = daoContainer;
         getClassType();
     }
 
-    abstract String getPkName();
+    public abstract String getPkName();
 
     protected abstract void getClassType();
 
