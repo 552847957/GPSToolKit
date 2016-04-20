@@ -30,7 +30,6 @@ import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
 import com.srmn.xwork.gpstoolkit.HomeFragment;
 import com.srmn.xwork.gpstoolkit.Leancloud.LeancloudDb;
 import com.srmn.xwork.gpstoolkit.Main;
-import com.srmn.xwork.gpstoolkit.R;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -41,6 +40,8 @@ import org.xutils.x;
 
 import java.util.Date;
 import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 
 
 /**
@@ -107,6 +108,9 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
         super.onCreate();
 
         initBuglyBeta();
+
+//        JPushInterface.setDebugMode(true);
+//        JPushInterface.init(this);
 
         DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
                 // 数据库的名字
