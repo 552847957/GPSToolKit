@@ -26,10 +26,13 @@ import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
 import com.srmn.xwork.androidlib.utils.DeviceUtils;
 import com.srmn.xwork.androidlib.utils.ServiceUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.crashreport.CrashReport;
 
 
 import org.xutils.view.annotation.ContentView;
 
+import java.io.Console;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +82,7 @@ public class Main extends BaseActivity
             getMyApp().showShortToastMessage("请开启GPS！");
 
             Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
-            startActivityForResult(intent, R.layout.activity_main);
+            startActivity(intent);
 
             return;
         }
@@ -88,6 +91,8 @@ public class Main extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Beta.checkUpgrade();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly'
+bugly {
+    appId = '900021861'
+    appKey = 'sFrLmIJUAPpqzCF6'
+}
+
 
 android {
     compileSdkVersion 23
@@ -8,8 +14,8 @@ android {
         applicationId "com.srmn.xwork.gpstoolkit"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.2"
     }
     buildTypes {
         release {
