@@ -5,8 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.media.ExifInterface;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Random;
@@ -18,6 +20,7 @@ public class ImageUtil {
 
     public static final int DEFAULT_IMAGE_QUANLITY = 85;
     private int width = 140, height = 40, codeLen = 4;
+    public static final String EXIF_TAG_IMAGE_DESCRIPTION = ExifInterface.TAG_MAKE;
     private String checkCode = "";
     private Random random = new Random();
 
@@ -219,6 +222,29 @@ public class ImageUtil {
      */
     public String getCheckCode() {
         return checkCode;
+    }
+
+
+    public static void wirteExifInfo(String filePath,String tag,String value)
+    {
+        try {
+            ExifInterface exifInterface  = new ExifInterface(filePath);
+            exifInterface.setAttribute(tag,value);
+            exifInterface.saveAttributes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String readExifInfo(String filePath,String tag)
+    {
+        try {
+            ExifInterface exifInterface  = new ExifInterface(filePath);
+            return exifInterface.getAttribute(tag);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 

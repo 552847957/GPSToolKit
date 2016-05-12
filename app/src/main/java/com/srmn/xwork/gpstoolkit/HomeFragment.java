@@ -233,6 +233,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void setGPSSatellites(int maxSatellites, int connnectSatellites) {
+
+
+
         if (connnectSatellites <= 0) {
             txtGPSConnectInfo.setText("正在等待GPS校准 ");
             txtConectText.setText("连接中");
@@ -264,6 +267,8 @@ public class HomeFragment extends BaseFragment {
         txtGPSConnectSatellitesInfo.setText(String.format("已校准：%d", connnectSatellites));
         txtGPSFindSatellitesInfo.setText(String.format("发现卫星数目(%d颗)", maxSatellites));
     }
+
+
 
     public void setLocation(GISLocation loc) {
         if (loc == null) {

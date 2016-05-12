@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -36,12 +38,14 @@ import com.srmn.xwork.androidlib.utils.ImageUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
 import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
+import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Dao.MarkerCategoryDao;
 import com.srmn.xwork.gpstoolkit.Dao.MarkerDao;
 import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 
+import org.w3c.dom.Text;
 import org.xutils.ex.DbException;
 import org.xutils.image.ImageOptions;
 import org.xutils.view.annotation.ContentView;
@@ -58,6 +62,7 @@ import java.util.List;
 public class MarkEditor extends BaseActivity {
 
     private static final int REQUEST_CODE_MANAGECATEGORY = 5;
+
     @ViewInject(R.id.txtLocationInfo)
     protected TextView txtLocationInfo;
     @ViewInject(R.id.btnManageCategory)
@@ -282,6 +287,7 @@ public class MarkEditor extends BaseActivity {
 
             try {
                 IOUtil.saveFile(filePath, fileContent);
+                ImageUtil.wirteExifInfo(filePath, ImageUtil.EXIF_TAG_IMAGE_DESCRIPTION,"");
                 loadPics.add(filePath);
                 reloadImages();
 
@@ -301,6 +307,7 @@ public class MarkEditor extends BaseActivity {
 
             try {
                 IOUtil.saveFile(filePath, fileContent);
+                ImageUtil.wirteExifInfo(filePath, ImageUtil.EXIF_TAG_IMAGE_DESCRIPTION,"");
                 loadPics.add(filePath);
                 reloadImages();
             } catch (Exception e) {
@@ -367,8 +374,9 @@ public class MarkEditor extends BaseActivity {
                 viewHolder = new ViewHolder();
                 viewHolder.imgListImage = (ImageView) view.findViewById(R.id.imgListImage);
                 viewHolder.btnDelete = (ImageView) view.findViewById(R.id.btnDelete);
-
-
+                viewHolder.btnDescription = (ImageView) view.findViewById(R.id.btnDescription);
+                viewHolder.txtFileSize = (TextView) view.findViewById(R.id.txtFileSize);
+                viewHolder.txtComment = (TextView) view.findViewById(R.id.txtComment);
                 view.setTag(viewHolder);
             } else {
                 view = convertView;
@@ -377,6 +385,14 @@ public class MarkEditor extends BaseActivity {
 
             if (null == viewHolder.imgListImage)
                 return view;
+
+            File file = new File(obj);
+
+            viewHolder.txtFileSize.setText(IOUtil.getDataSize(file.length()));
+
+            final String imageDescription = ImageUtil.readExifInfo(obj,ImageUtil.EXIF_TAG_IMAGE_DESCRIPTION);
+
+            viewHolder.txtComment.setText(imageDescription);
 
             ImageOptions imageOptions = new ImageOptions.Builder()
                     // 如果ImageView的大小不是定义为wrap_content, 不要crop.
@@ -409,6 +425,30 @@ public class MarkEditor extends BaseActivity {
                 }
             });
 
+            viewHolder.btnDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    final EditText etCommnet = new EditText(context);
+                    etCommnet.setText(imageDescription);
+
+                    new android.app.AlertDialog.Builder(context)
+                            .setTitle("请输入图片备注：")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setView(etCommnet)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ImageUtil.wirteExifInfo(obj,ImageUtil.EXIF_TAG_IMAGE_DESCRIPTION,etCommnet.getText().toString());
+                                    reloadImages();
+                                    showShortToastMessage("备注图片成功！");
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+            });
+
             viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -433,6 +473,9 @@ public class MarkEditor extends BaseActivity {
         class ViewHolder {
             public ImageView imgListImage;
             public ImageView btnDelete;
+            public ImageView btnDescription;
+            public TextView txtFileSize;
+            public TextView txtComment;
         }
     }
 

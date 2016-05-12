@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 15
@@ -33,7 +33,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
-    compile 'org.xutils:xutils:3.3.32'
+    compile 'org.xutils:xutils:3.3.34'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.beardedhen:androidbootstrap:2.0.1'
     compile 'com.cesarferreira.colorize:library:0.2.1'

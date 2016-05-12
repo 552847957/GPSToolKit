@@ -187,7 +187,12 @@ public class PhotoAction {
             return resizeBitmap(BitmapFactory.decodeFile(picturePath));
         } else if (requestCode == PHOTO_TACK) {
             // 获得压缩后的bitmap
-            Bitmap imageBitmap = BitmapFactory.decodeFile(imageurl);
+
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+             opt.inPreferredConfig = Bitmap.Config.RGB_565;
+             opt.inPurgeable = true;
+             opt.inInputShareable = true;
+            Bitmap imageBitmap = BitmapFactory.decodeFile(imageurl,opt);
 
             imageBitmap = resizeBitmap(imageBitmap);
 
