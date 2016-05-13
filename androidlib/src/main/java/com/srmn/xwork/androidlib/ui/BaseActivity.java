@@ -26,6 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         x.view().inject(this);
+
     }
 
 
