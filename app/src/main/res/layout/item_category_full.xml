@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:gravity="center_vertical">
 
-    <LinearLayout
+        <LinearLayout
+            android:id="@+id/ll_item"
         android:layout_width="match_parent" android:layout_weight="1"
         android:layout_height="wrap_content" android:orientation="vertical">
 
@@ -28,12 +29,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="总计12个标注 | 共35张图片 | 总体积12.23MB" />
-
-        <TextView android:id="@+id/txtLastUpdateDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="最后更新于：2016-02-09 21:12:12" />
 
     </LinearLayout>
 
@@ -58,10 +53,18 @@
             android:layout_height="wrap_content" android:layout_weight="1" />
 
         <Button
+            android:id="@+id/btnPublish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:text="发布到云图" />
 
         <Button
+            android:id="@+id/btnMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看地图" />
+
+        <Button
+            android:id="@+id/btnExport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:text="导出数据" />
 

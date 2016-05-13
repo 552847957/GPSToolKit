@@ -2,10 +2,12 @@ package com.srmn.xwork.gpstoolkit.Entities;
 
 import com.google.gson.reflect.TypeToken;
 import com.srmn.xwork.androidlib.utils.GsonUtil;
+import com.srmn.xwork.androidlib.utils.IOUtil;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,5 +151,18 @@ public class Marker implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getInfo() {
+
+        int totalImageCount = this.getImagesList().size();
+
+        long totalSize = 0;
+
+        for (String imagePath : this.getImagesList()) {
+            totalSize += new File(imagePath).length();
+        }
+
+        return "共" + totalImageCount + "张图片 | 总体积" + IOUtil.getDataSize(totalSize) + "";
     }
 }

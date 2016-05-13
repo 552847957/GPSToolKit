@@ -229,7 +229,7 @@ public class ImageUtil {
     {
         try {
             ExifInterface exifInterface  = new ExifInterface(filePath);
-            exifInterface.setAttribute(tag,value);
+            exifInterface.setAttribute(tag, StringUtil.encryptBASE64(value));
             exifInterface.saveAttributes();
         } catch (IOException e) {
             e.printStackTrace();
@@ -240,7 +240,7 @@ public class ImageUtil {
     {
         try {
             ExifInterface exifInterface  = new ExifInterface(filePath);
-            return exifInterface.getAttribute(tag);
+            return StringUtil.decryptBASE64(exifInterface.getAttribute(tag));
         } catch (IOException e) {
             e.printStackTrace();
             return "";

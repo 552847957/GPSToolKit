@@ -24,6 +24,14 @@ public class SharedPrefsUtil {
         MyApplication.getContext().getSharedPreferences(name, Context.MODE_PRIVATE).edit().putInt(key, value).commit();
     }
 
+    public static void putIntValue(Context context, String name, String key, int value) {
+        context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putInt(key, value).commit();
+    }
+
+    public static int getIntValue(Context context, String name, String key, int defValue) {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE).getInt(key, defValue);
+    }
+
     /**
      * 存储数据(String)
      */

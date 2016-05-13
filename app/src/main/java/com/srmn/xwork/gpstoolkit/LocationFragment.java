@@ -1,6 +1,7 @@
 package com.srmn.xwork.gpstoolkit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,16 +9,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.utils.IOUtil;
+import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.App.BaseFragment;
+import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +47,8 @@ public class LocationFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     @ViewInject(R.id.el_list)
-    protected ExpandableListView el_list;
+    protected ListView el_list;
     protected List<MarkerCategory> parentData = null;
-    protected Map<Integer, List<Marker>> map = null;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -81,18 +89,13 @@ public class LocationFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         initData();
-        el_list.setAdapter(new MyAdapter());
+        el_list.setAdapter(new MyAdapter(getContext(), R.layout.item_category_full, parentData));
     }
 
     private void initData() {
 
         parentData = getDaos().getMarkerCategoryDaoInstance().findAllFullMarkerCategory();
 
-        map = new HashMap<Integer, List<Marker>>();
-
-        for (int i = 0; i < parentData.size(); i++) {
-            map.put(parentData.get(i).getId(), parentData.get(i).getMarkers());
-        }
     }
 
 
@@ -126,89 +129,57 @@ public class LocationFragment extends BaseFragment {
     }
 
 
-    class MyAdapter extends BaseExpandableListAdapter {
+    class MyAdapter extends BaseArrayAdapter<MarkerCategory> {
 
-        //得到子item需要关联的数据
-        @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            Integer key = parentData.get(groupPosition).getId();
-            return (map.get(key).get(childPosition));
-        }
-
-        //得到子item的ID
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        //设置子item的组件
-        @Override
-        public View getChildView(int groupPosition, int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
-            Integer key = parentData.get(groupPosition).getId();
-            String info = map.get(key).get(childPosition).getName();
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) parentActivity
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.l_location_item, null);
-            }
-            TextView tv = (TextView) convertView
-                    .findViewById(R.id.second_textview);
-            tv.setText(info);
-            return tv;
-        }
-
-        //获取当前父item下的子item的个数
-        @Override
-        public int getChildrenCount(int groupPosition) {
-            Integer key = parentData.get(groupPosition).getId();
-            int size = map.get(key).size();
-            return size;
-        }
-
-        //获取当前父item的数据
-        @Override
-        public Object getGroup(int groupPosition) {
-            return parentData.get(groupPosition);
+        public MyAdapter(Context context, int resource, List<MarkerCategory> objects) {
+            super(context, resource, objects);
         }
 
         @Override
-        public int getGroupCount() {
-            return parentData.size();
-        }
+        public View getView(int position, View convertView, ViewGroup parent) {
 
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
+            final MarkerCategory markerCategory = (MarkerCategory) getItem(position);
 
-        //设置父item组件
-        @Override
-        public View getGroupView(int groupPosition, boolean isExpanded,
-                                 View convertView, ViewGroup parent) {
+            View view;
+            ViewHolder viewHolder;
 
             if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) parentActivity
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.l_location_group, null);
+                view = LayoutInflater.from(context).inflate(layoutID, null);
+                viewHolder = new ViewHolder();
+                viewHolder.txtDesciption = (TextView) view.findViewById(R.id.txtDesciption);
+                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+                viewHolder.btnPublish = (Button) view.findViewById(R.id.btnPublish);
+                viewHolder.btnExport = (Button) view.findViewById(R.id.btnExport);
+                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+                view.setTag(viewHolder);
+            } else {
+                view = convertView;
+                viewHolder = (ViewHolder) view.getTag();
             }
-            TextView tv = (TextView) convertView
-                    .findViewById(R.id.parent_textview);
-            tv.setText(parentData.get(groupPosition).getName());
-            return tv;
+
+            viewHolder.txtDesciption.setText(markerCategory.getDescription());
+            viewHolder.txtName.setText(markerCategory.getName() + "");
+
+            viewHolder.ll_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    //Intent传递参数
+                    intent.putExtra("ID", markerCategory.getId());
+
+                    ((BaseActivity) getActivity()).gotoActivity(intent, MarkList.class);
+                }
+            });
+
+            return view;
         }
 
-        @Override
-        public boolean hasStableIds() {
-            return true;
+        class ViewHolder {
+            public TextView txtName;
+            public TextView txtDesciption;
+            public Button btnPublish;
+            public Button btnExport;
+            public LinearLayout ll_item;
         }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
-
     }
-
-
 }

@@ -81,7 +81,7 @@ public class IOUtil {
     }
 
     /***
-     * encode by Base64
+     * encodeBase64 by Base64
      */
     public static String encodeBase64(byte[] input) throws Exception {
         return Base64.encodeToString(input, Base64.DEFAULT);
