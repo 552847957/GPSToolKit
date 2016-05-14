@@ -197,6 +197,10 @@ public class IOUtil {
         return cachePath;
     }
 
+    public static String getDiskFilesBaseDir() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
 
     public static Intent getImageFileIntent(Uri uri)
 
@@ -216,10 +220,6 @@ public class IOUtil {
 
 
     public static void saveTextFile(String fileName, String content, Context context) throws Exception {
-        // 由于页面输入的都是文本信息，所以当文件名不是以.txt后缀名结尾时，自动加上.txt后缀
-        if (!fileName.endsWith(".txt")) {
-            fileName = fileName + ".txt";
-        }
 
         byte[] buf = fileName.getBytes("iso8859-1");
 

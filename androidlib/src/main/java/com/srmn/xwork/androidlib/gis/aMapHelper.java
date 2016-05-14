@@ -31,6 +31,30 @@ public class AMapHelper {
         return drawMarkerOnView(aMap, (BitmapDescriptorFactory.fromResource(iconResourseID)), centerPosition);
     }
 
+    public static Marker drawMarkerOnView(AMap aMap, ShowMarker showMarker) {
+        return aMap.addMarker(new MarkerOptions()
+                .position(new LatLng(showMarker.getLat(), showMarker.getLng())).title(showMarker.getTitle()).snippet(showMarker.getTitle() + " 222")
+                .icon(BitmapDescriptorFactory.fromResource(showMarker.getIconResourseID())));
+    }
+
+    public static void showMarkersOnView(AMap aMap, List<ShowMarker> showMarkers) {
+
+        List<LatLng> points = new ArrayList<>();
+
+        for (ShowMarker showMarket : showMarkers) {
+            Marker marker = drawMarkerOnView(aMap, showMarket);
+            points.add(marker.getPosition());
+        }
+
+        if (points.size() > 1) {
+            setViewFit(aMap, points, 50);
+        } else {
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(points.get(0), 11));
+        }
+    }
+
+
+
     public static Polyline drawLineOnView(AMap aMap, List<LatLng> lines, int startIconResourseID, int endIconResourseID, int color) {
         aMap.addMarker(new MarkerOptions()
                 .position(lines.get(0))
@@ -44,14 +68,14 @@ public class AMapHelper {
         return aMap.addPolyline((new PolylineOptions()).addAll(lines).color(color));
     }
 
-    public static void setViewFit(AMap aMap, List<LatLng> points, int zoom) {
+    public static void setViewFit(AMap aMap, List<LatLng> points, int padding) {
         LatLngBounds.Builder build = new LatLngBounds.Builder();
 
         for (LatLng item : points) {
             build.include(item);
         }
         // 移动地图，所有marker自适应显示。LatLngBounds与地图边缘zoom像素的填充区域
-        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build.build(), zoom));
+        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build.build(), padding));
     }
 
 }

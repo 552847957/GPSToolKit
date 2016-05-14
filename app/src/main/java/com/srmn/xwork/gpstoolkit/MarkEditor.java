@@ -35,6 +35,7 @@ import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
 import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.ImageUtil;
+import com.srmn.xwork.androidlib.utils.IntentUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
 import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
@@ -202,6 +203,11 @@ public class MarkEditor extends BaseActivity {
 
     @Event(value = R.id.btnSave)
     private void onbtnSaveClick(View view) {
+
+        txtName.clearFocus();
+        txtLocationInfo.clearFocus();
+        txtRemark.clearFocus();
+        spnCategory.clearFocus();
 
         Marker editData = getCurrentData();
 
@@ -436,11 +442,8 @@ public class MarkEditor extends BaseActivity {
                         showShortToastMessage("图片不存在.");
                         return;
                     }
-
-                    Intent it = new Intent(Intent.ACTION_VIEW);
-                    Uri mUri = Uri.parse("file://" + file.getPath());
-                    it.setDataAndType(mUri, "image/*");
-                    startActivity(it);
+                    Intent openImageIntent = IntentUtil.openImage(file.getPath());
+                    startActivity(openImageIntent);
                 }
             });
 

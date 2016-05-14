@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.srmn.xwork.androidlib.gis.ShowMarker;
+import com.srmn.xwork.androidlib.maps.ShowMap;
 import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.utils.ClipboardUtil;
+import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.App.BaseFragment;
@@ -27,6 +33,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +125,7 @@ public class LocationFragment extends BaseFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -136,7 +143,7 @@ public class LocationFragment extends BaseFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, final View convertView, ViewGroup parent) {
 
             final MarkerCategory markerCategory = (MarkerCategory) getItem(position);
 
@@ -150,6 +157,7 @@ public class LocationFragment extends BaseFragment {
                 viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
                 viewHolder.btnPublish = (Button) view.findViewById(R.id.btnPublish);
                 viewHolder.btnExport = (Button) view.findViewById(R.id.btnExport);
+                viewHolder.btnMap = (Button) view.findViewById(R.id.btnMap);
                 viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
                 view.setTag(viewHolder);
             } else {
@@ -160,14 +168,85 @@ public class LocationFragment extends BaseFragment {
             viewHolder.txtDesciption.setText(markerCategory.getDescription());
             viewHolder.txtName.setText(markerCategory.getName() + "");
 
+            viewHolder.btnMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<ShowMarker> showMarkers = new ArrayList<>();
+
+                    for (Marker marker : markerCategory.getMarkers()) {
+                        ShowMarker showMarker = new ShowMarker();
+                        showMarker.setTitle(marker.getName());
+                        showMarker.setLat(marker.getLatitude());
+                        showMarker.setLng(marker.getLongitude());
+                        showMarker.setIconResourseID(R.drawable.poi_marker_pressed);
+                        showMarkers.add(showMarker);
+                    }
+
+
+                    Gson gson = GsonUtil.getGson();
+
+                    Intent intent = new Intent();
+                    //Intent传递参数
+                    intent.putExtra("showMarkers", gson.toJson(showMarkers));
+                    ((BaseActivity) getActivity()).gotoActivity(intent, ShowMap.class);
+                }
+            });
+
+
             viewHolder.ll_item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     //Intent传递参数
-                    intent.putExtra("ID", markerCategory.getId());
+                    intent.putExtra("MarkerGategoryID", markerCategory.getId());
 
                     ((BaseActivity) getActivity()).gotoActivity(intent, MarkList.class);
+                }
+            });
+
+
+            viewHolder.btnExport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String baseDir = IOUtil.getDiskFilesBaseDir() + "/GPStoolKit/export_data" + "/" + markerCategory.getName().replace(" ", "") + "/";
+
+                    File file = new File(baseDir);
+
+                    if (file.exists())
+                        file.delete();
+
+                    file.mkdir();
+
+                    String csvFilePath = baseDir + "datafile.csv";
+
+                    File csvFile = new File(csvFilePath);
+
+                    if (csvFile.exists())
+                        csvFile.delete();
+
+                    StringBuilder sbcsv = new StringBuilder();
+                    //生成列头
+                    sbcsv.append("\"name\",\"address\",\"x\",\"y\",\"no\"\r\n");
+
+                    int number = 0;
+
+
+                    for (Marker marker : markerCategory.getMarkers()) {
+                        number++;
+                        sbcsv.append("\"" + marker.getName() + "\",\"" + marker.getDescription() + "\",\"" + marker.getLongitude() + "\",\"" + marker.getLatitude() + "\",\"" + number + "\"\r\n");
+                    }
+
+                    try {
+                        IOUtil.saveTextFile(csvFilePath, sbcsv.toString(), context);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    MyApplication.getInstance().showLongToastMessage("数据成功导出到目录" + file.getAbsolutePath());
+
+                    ClipboardUtil.copyTextToClipboard(context, "GPS工具箱导出路径", file.getAbsolutePath());
+
                 }
             });
 
@@ -179,6 +258,7 @@ public class LocationFragment extends BaseFragment {
             public TextView txtDesciption;
             public Button btnPublish;
             public Button btnExport;
+            public Button btnMap;
             public LinearLayout ll_item;
         }
     }

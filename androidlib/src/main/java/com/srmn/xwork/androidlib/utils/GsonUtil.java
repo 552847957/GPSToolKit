@@ -6,12 +6,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -67,6 +70,20 @@ public class GsonUtil {
         Gson gson = gsonb.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         return gson;
     }
+
+    public static <T> ArrayList<T> jsonToList(String json, Class<T> classOfT) {
+        Type type = new TypeToken<ArrayList<JsonObject>>() {
+        }.getType();
+        ArrayList<JsonObject> jsonObjs = new Gson().fromJson(json, type);
+
+        ArrayList<T> listOfT = new ArrayList<>();
+        for (JsonObject jsonObj : jsonObjs) {
+            listOfT.add(new Gson().fromJson(jsonObj, classOfT));
+        }
+
+        return listOfT;
+    }
+
 
 
     public static <T> T DeserializerSingleDataResult(String json, Type objectType) {

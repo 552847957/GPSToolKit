@@ -14,8 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.srmn.xwork.androidlib.gis.GISLocation;
+import com.srmn.xwork.androidlib.gis.ShowMarker;
+import com.srmn.xwork.androidlib.maps.ShowMap;
 import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
 import com.srmn.xwork.androidlib.utils.UIUtil;
@@ -45,12 +49,13 @@ public class MarkList extends BaseActivity {
         //使用Intent对象得到FirstActivity传递来的参数
         Intent intent = getIntent();
 
-        if (!intent.hasExtra("ID")) {
+        if (!intent.hasExtra("MarkerGategoryID")) {
             showShortToastMessage("没有ID，无法接收数据。");
+            finish();
             return;
         }
 
-        int ID = intent.getIntExtra("ID", 0);
+        int ID = intent.getIntExtra("MarkerGategoryID", 0);
 
         putSharedPrefsIntValue("MarkList", "MarkListID", ID);
 
@@ -96,6 +101,8 @@ public class MarkList extends BaseActivity {
                 viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
                 viewHolder.btnEdit = (Button) view.findViewById(R.id.btnEdit);
                 viewHolder.btnDelete = (Button) view.findViewById(R.id.btnDelete);
+                viewHolder.btnShow = (Button) view.findViewById(R.id.btnShow);
+
                 view.setTag(viewHolder);
             } else {
                 view = convertView;
@@ -142,6 +149,35 @@ public class MarkList extends BaseActivity {
 
             viewHolder.btnDelete.setOnClickListener(deleteHandler);
 
+
+            View.OnClickListener showMapHandler = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    List<ShowMarker> showMarkers = new ArrayList<>();
+
+                    ShowMarker showMarker = new ShowMarker();
+                    showMarker.setTitle(marker.getName());
+                    showMarker.setLat(marker.getLatitude());
+                    showMarker.setLng(marker.getLongitude());
+                    showMarker.setIconResourseID(R.drawable.poi_marker_pressed);
+
+                    showMarkers.add(showMarker);
+
+                    Gson gson = GsonUtil.getGson();
+
+                    Intent intent = new Intent();
+                    //Intent传递参数
+                    intent.putExtra("showMarkers", gson.toJson(showMarkers));
+                    gotoActivity(intent, ShowMap.class);
+
+                }
+            };
+
+            viewHolder.btnShow.setOnClickListener(showMapHandler);
+
+
+
             return view;
         }
 
@@ -153,6 +189,8 @@ public class MarkList extends BaseActivity {
             public LinearLayout ll_item;
             public Button btnEdit;
             public Button btnDelete;
+            public Button btnShow;
+
         }
     }
 }
