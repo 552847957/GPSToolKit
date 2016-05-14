@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.srmn.xwork.androidlib.R;
@@ -51,5 +53,49 @@ public class UIUtil {
 
     public static void showLongToastMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * 根据值, 设置spinner默认选中:
+     *
+     * @param spinner
+     * @param value
+     */
+    public static void setSpinnerItemSelectedByValue(Spinner spinner, String value) {
+        SpinnerAdapter apsAdapter = spinner.getAdapter(); //得到SpinnerAdapter对象
+        int k = apsAdapter.getCount();
+        for (int i = 0; i < k; i++) {
+            if (value.equals(apsAdapter.getItem(i).toString())) {
+                spinner.setSelection(i, true);// 默认选中项
+                break;
+            }
+        }
+    }
+
+    /**
+     * 根据值, 设置spinner默认选中:
+     *
+     * @param spinner
+     * @param value
+     */
+    public static <T> void setSpinnerItemSelectedByValue(Spinner spinner, String value, String propertyName, Class<T> type) {
+        SpinnerAdapter apsAdapter = spinner.getAdapter(); //得到SpinnerAdapter对象
+        int k = apsAdapter.getCount();
+        for (int i = 0; i < k; i++) {
+
+            try {
+                T id = PropertyUtil.getPropertyValue(propertyName, type, apsAdapter.getItem(i));
+
+                if (value.equals(id.toString())) {
+                    spinner.setSelection(i, true);// 默认选中项
+                    break;
+                }
+
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
 }

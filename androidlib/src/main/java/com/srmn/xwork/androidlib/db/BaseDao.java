@@ -89,5 +89,55 @@ public abstract class BaseDao<E> {
         }
     }
 
+    public List<E> findAllByWhere(String columnName, String op, Object value) {
+        List<E> entities = new ArrayList<E>();
+        try {
+            entities = getSelector().where(columnName, op, value).findAll();
+        } catch (DbException ex) {
+            ex.printStackTrace();
+            return entities;
+        }
+        if (entities == null) {
+            entities = new ArrayList<E>();
+        }
+        return entities;
+    }
+
+    public E findFirstByWhere(String columnName, String op, Object value) {
+        E entity = null;
+        try {
+            entity = getSelector().where(columnName, op, value).findFirst();
+        } catch (DbException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return entity;
+    }
+
+
+    public List<E> findAllBySelector(Selector selector) {
+        List<E> entities = new ArrayList<E>();
+        try {
+            entities = selector.findAll();
+        } catch (DbException ex) {
+            ex.printStackTrace();
+            return entities;
+        }
+        if (entities == null) {
+            entities = new ArrayList<E>();
+        }
+        return entities;
+    }
+
+    public E findFirstBySelector(Selector selector) {
+        E entity = null;
+        try {
+            entity = (E) selector.findFirst();
+        } catch (DbException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return entity;
+    }
 
 }

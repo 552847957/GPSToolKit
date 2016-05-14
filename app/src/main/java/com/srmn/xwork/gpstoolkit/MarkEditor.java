@@ -62,6 +62,7 @@ import java.util.List;
 public class MarkEditor extends BaseActivity {
 
     private static final int REQUEST_CODE_MANAGECATEGORY = 5;
+    private static final String TAG = "MarkEditor";
 
     @ViewInject(R.id.txtLocationInfo)
     protected TextView txtLocationInfo;
@@ -84,14 +85,20 @@ public class MarkEditor extends BaseActivity {
 
     protected List<MarkerCategory> dataItems;
 
-    protected List<String> loadPics;
+
+    public Marker getCurrentData() {
+        return getSharedPrefsJSonValue(TAG, "CurrentData", Marker.class);
+    }
+
+    public void setCurrentData(Marker currentDate) {
+        putSharedPrefsJSonValue(TAG, "CurrentData", currentDate);
+    }
 
     protected PhotoAction photoAction;
 
     private ArrayAdapter<MarkerCategory> spinadapter;
 
-    private Marker editData;
-    private boolean isInsert;
+
 
     private MarkerImagesAdapter markerImagesAdapter;
     /**
@@ -148,19 +155,28 @@ public class MarkEditor extends BaseActivity {
         //使用Intent对象得到FirstActivity传递来的参数
         Intent intent = getIntent();
 
-        if (intent.hasExtra("location")) {
-            GISLocation location = (GISLocation) intent.getSerializableExtra("location");
+        if (intent.hasExtra("EditMarker")) {
+            Marker marker = (Marker) intent.getSerializableExtra("EditMarker");
 
-            loadPics = new ArrayList<String>();
-            txtLocationInfo.setText(location.toLocationInfo());
+            setCurrentData(marker);
+        } else {
+            setCurrentData(null);
         }
 
-        isInsert = false;
+        if (getCurrentData() == null) {
+            showShortToastMessage("没有可编辑的数据！");
+            finish();
+        } else {
+            Marker marker = getCurrentData();
 
-        if (editData == null) {
-            isInsert = true;
+            txtName.setText(marker.getName());
+            txtLocationInfo.setText(marker.getLocationInfo());
+            txtRemark.setText(marker.getDescription());
+            UIUtil.setSpinnerItemSelectedByValue(spnCategory, marker.getMarkerCategoryID() + "", "Id", Integer.class);
+
+            //editData.setMarkerCategoryID(markerCategory.getId());
+
         }
-
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -187,20 +203,18 @@ public class MarkEditor extends BaseActivity {
     @Event(value = R.id.btnSave)
     private void onbtnSaveClick(View view) {
 
-        if (isInsert) {
-            editData = new Marker();
-        }
+        Marker editData = getCurrentData();
+
 
         MarkerCategory markerCategory = (MarkerCategory) spnCategory.getSelectedItem();
         editData.setMarkerCategoryID(markerCategory.getId());
         editData.setName(txtName.getText().toString());
-        editData.setImagesList(loadPics);
+        editData.setImagesList(getCurrentData().imagesList);
         editData.setLocationInfo(txtLocationInfo.getText().toString());
         editData.setDescription(txtRemark.getText().toString());
 
-
         try {
-            if (isInsert) {
+            if (editData.getId() == null || editData.getId().equals(0)) {
                 getMarkerDaoInstance().saveBindingId(editData);
             } else {
                 getMarkerDaoInstance().update(editData);
@@ -211,6 +225,7 @@ public class MarkEditor extends BaseActivity {
             showShortToastMessage("标注保存失败！");
             e.printStackTrace();
         }
+
 
     }
 
@@ -288,7 +303,9 @@ public class MarkEditor extends BaseActivity {
             try {
                 IOUtil.saveFile(filePath, fileContent);
                 ImageUtil.wirteExifInfo(filePath, ImageUtil.EXIF_TAG_IMAGE_DESCRIPTION,"");
-                loadPics.add(filePath);
+                Marker marker = getCurrentData();
+                marker.imagesList.add(filePath);
+                setCurrentData(marker);
                 reloadImages();
 
             } catch (Exception e) {
@@ -308,7 +325,9 @@ public class MarkEditor extends BaseActivity {
             try {
                 IOUtil.saveFile(filePath, fileContent);
                 ImageUtil.wirteExifInfo(filePath, ImageUtil.EXIF_TAG_IMAGE_DESCRIPTION,"");
-                loadPics.add(filePath);
+                Marker marker = getCurrentData();
+                marker.imagesList.add(filePath);
+                setCurrentData(marker);
                 reloadImages();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -319,7 +338,7 @@ public class MarkEditor extends BaseActivity {
 
     private void reloadImages() {
 
-        markerImagesAdapter = new MarkerImagesAdapter(MarkEditor.this, R.layout.list_image_item, loadPics);
+        markerImagesAdapter = new MarkerImagesAdapter(MarkEditor.this, R.layout.list_image_item, getCurrentData().imagesList);
         lstImages.setAdapter(markerImagesAdapter);
         markerImagesAdapter.notifyDataSetChanged();
 
@@ -457,7 +476,9 @@ public class MarkEditor extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             IOUtil.deleteFile(obj);
-                            loadPics.remove(cindex);
+                            Marker marker = getCurrentData();
+                            marker.imagesList.remove(cindex);
+                            setCurrentData(marker);
                             reloadImages();
                             showShortToastMessage("删除图片成功！");
                         }

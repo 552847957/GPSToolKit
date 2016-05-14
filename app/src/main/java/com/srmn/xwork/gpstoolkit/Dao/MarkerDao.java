@@ -24,14 +24,7 @@ public class MarkerDao extends BaseDao<Marker> {
     }
 
     public List<Marker> queryByCategoryID(int categoryID) {
-        List<Marker> entities = new ArrayList<Marker>();
-        try {
-            entities = getSelector().where("markerCategoryID", "=", categoryID).findAll();
-        } catch (DbException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return entities;
+        return findAllByWhere("markerCategoryID", "=", categoryID);
     }
 
     @Override

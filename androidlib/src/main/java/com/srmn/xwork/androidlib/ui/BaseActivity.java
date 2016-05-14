@@ -1,5 +1,6 @@
 package com.srmn.xwork.androidlib.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,9 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
+import com.srmn.xwork.androidlib.utils.GsonUtil;
+import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
 import com.srmn.xwork.androidlib.utils.UIUtil;
 
 import org.xutils.x;
@@ -121,6 +125,91 @@ public class BaseActivity extends AppCompatActivity {
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(false);
     }
+
+
+    /**
+     * 存储数据(Long)
+     */
+    public void putSharedPrefsLongValue(String name, String key, long value) {
+        context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putLong(key, value).commit();
+    }
+
+    /**
+     * 存储数据(Int)
+     */
+    public void putSharedPrefsIntValue(String name, String key, int value) {
+        context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putInt(key, value).commit();
+    }
+
+    /**
+     * 存储数据(String)
+     */
+    public void putSharedPrefsStringValue(String name, String key, String value) {
+        context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putString(key, value).commit();
+    }
+
+    /**
+     * 存储数据(boolean)
+     */
+    public void putSharedPrefsBooleanValue(String name, String key,
+                                           boolean value) {
+        context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putBoolean(key, value).commit();
+    }
+
+    /**
+     * 存储数据(JSON Object)
+     */
+    public <T> void putSharedPrefsJSonValue(String name, String key, T obj) {
+        if (obj == null) {
+            putSharedPrefsStringValue(name, key, "");
+            return;
+        }
+
+        Gson gson = GsonUtil.getGson();
+
+        putSharedPrefsStringValue(name, key, gson.toJson(obj));
+    }
+
+
+    public <T> T getSharedPrefsJSonValue(String name, String key, Class<T> classOfT) {
+        String json = getSharedPrefsStringValue(name, key, "");
+
+        if (json == null)
+            return null;
+
+        Gson gson = GsonUtil.getGson();
+
+        T obj = gson.fromJson(json, classOfT);
+
+        return obj;
+    }
+
+    public String getSharedPrefsStringValue(String name, String key, String defValue) {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE).getString(key, defValue);
+    }
+
+    /**
+     * 取出数据(Long)
+     */
+    public long getSharedPrefsLongValue(String name, String key, long defValue) {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE).getLong(key, defValue);
+    }
+
+    /**
+     * 取出数据(int)
+     */
+    public int getSharedPrefsIntValue(String name, String key, int defValue) {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE).getInt(key, defValue);
+    }
+
+    /**
+     * 取出数据(boolean)
+     */
+    public boolean getSharedPrefsBooleanValue(String name, String key,
+                                              boolean defValue) {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE).getBoolean(key, defValue);
+    }
+
 
 
 }

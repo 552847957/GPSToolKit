@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,19 +21,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.GISLocationService;
 import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
 import com.srmn.xwork.androidlib.utils.DeviceUtils;
+import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.ServiceUtil;
+import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
+import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.crashreport.CrashReport;
 
 
 import org.xutils.view.annotation.ContentView;
 
-import java.io.Console;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,7 @@ import java.util.List;
 public class Main extends BaseActivity
         implements TrackerFragment.OnFragmentInteractionListener
         , LocationFragment.OnFragmentInteractionListener {
+    private static final String TAG = "Main";
 
     //声明AMapLocationClient类对象
 
@@ -61,9 +65,26 @@ public class Main extends BaseActivity
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
 
+    private Handler mainhandler = new Handler();
 
-    private GISLocation currentLocation;
-    private GISSatelliteStatus gisSatelliteStatus;
+
+    public GISLocation getCurrentLocation() {
+        return getSharedPrefsJSonValue(TAG, "CurrentLocation", GISLocation.class);
+    }
+
+
+    public void setCurrentLocation(GISLocation currentLocation) {
+        putSharedPrefsJSonValue(TAG, "CurrentLocation", currentLocation);
+    }
+
+
+    public GISSatelliteStatus getGisSatelliteStatus() {
+        return getSharedPrefsJSonValue(TAG, "GisSatelliteStatus", GISSatelliteStatus.class);
+    }
+
+    public void setGisSatelliteStatus(GISSatelliteStatus gisSatelliteStatus) {
+        putSharedPrefsJSonValue(TAG, "GisSatelliteStatus", gisSatelliteStatus);
+    }
 
     private MyReceiver receiver = null;
 
@@ -92,7 +113,13 @@ public class Main extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Beta.checkUpgrade();
+        mainhandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                /***** 检查更新 *****/
+                Beta.checkUpgrade();
+            }
+        }, 2000);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -189,37 +216,40 @@ public class Main extends BaseActivity
     }
 
     public boolean ConnectToGPS() {
-        if (gisSatelliteStatus == null)
+        if (getGisSatelliteStatus() == null)
             return false;
-        if (gisSatelliteStatus.getConnnectSatellites() <= 0)
+        if (getGisSatelliteStatus().getConnnectSatellites() <= 0)
             return false;
         return true;
     }
 
     public void newMark() {
 
-        if (currentLocation == null) {
+
+        if (getCurrentLocation() == null) {
             getMyApp().showShortToastMessage("没有位置信息");
             return;
         }
 
+        Marker marker = new Marker(getCurrentLocation());
+
         Intent intent = new Intent();
         //Intent传递参数
-        intent.putExtra("location", currentLocation);
+        intent.putExtra("EditMarker", marker);
 
         gotoActivity(intent, MarkEditor.class);
 
     }
 
     public void trackPath() {
-        if (currentLocation == null) {
+        if (getCurrentLocation() == null) {
             getMyApp().showShortToastMessage("没有位置信息");
             return;
         }
 
         Intent intent = new Intent();
         //Intent传递参数
-        intent.putExtra("location", currentLocation);
+        intent.putExtra("location", getCurrentLocation());
 
         gotoActivity(intent, TrackerMap.class);
     }
@@ -236,11 +266,11 @@ public class Main extends BaseActivity
             Bundle bundle = intent.getExtras();
 
             if (bundle.containsKey(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION)) {
-                currentLocation = (GISLocation) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION);
-                ((HomeFragment) mSectionsPagerAdapter.getItem(0)).setLocation(currentLocation);
+                setCurrentLocation((GISLocation) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION));
+                ((HomeFragment) mSectionsPagerAdapter.getItem(0)).setLocation(getCurrentLocation());
             } else if (bundle.containsKey(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS)) {
-                gisSatelliteStatus = (GISSatelliteStatus) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS);
-                ((HomeFragment) mSectionsPagerAdapter.getItem(0)).setGPSSatellites(gisSatelliteStatus.getFindSatellites(), gisSatelliteStatus.getConnnectSatellites());
+                setGisSatelliteStatus((GISSatelliteStatus) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS));
+                ((HomeFragment) mSectionsPagerAdapter.getItem(0)).setGPSSatellites(getGisSatelliteStatus().getFindSatellites(), getGisSatelliteStatus().getConnnectSatellites());
             }
 
         }

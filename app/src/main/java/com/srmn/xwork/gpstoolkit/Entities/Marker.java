@@ -1,8 +1,10 @@
 package com.srmn.xwork.gpstoolkit.Entities;
 
 import com.google.gson.reflect.TypeToken;
+import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
+import com.srmn.xwork.androidlib.utils.StringUtil;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -39,6 +41,20 @@ public class Marker implements Serializable {
     private double altitude;
     @Column(name = "objID")
     private String objID;
+
+    public Marker() {
+
+    }
+
+    public Marker(GISLocation currentLocation) {
+        this.name = currentLocation.getAddress();
+        this.description = currentLocation.getAddress();
+        this.locationInfo = currentLocation.toLocationInfo();
+        this.imagesList = new ArrayList<String>();
+        this.latitude = currentLocation.getLatitude();
+        this.longitude = currentLocation.getLongitude();
+        this.altitude = currentLocation.getAltitude();
+    }
 
     public String getObjID() {
         return objID;
@@ -113,6 +129,9 @@ public class Marker implements Serializable {
 
     public void setLocationInfo(String locationInfo) {
 
+        if (StringUtil.isNullOrEmpty(locationInfo))
+            return;
+
         this.locationInfo = locationInfo;
 
         String[] datas = this.locationInfo.split(",");
@@ -164,5 +183,10 @@ public class Marker implements Serializable {
         }
 
         return "共" + totalImageCount + "张图片 | 总体积" + IOUtil.getDataSize(totalSize) + "";
+    }
+
+    @Override
+    public String toString() {
+        return this.getId() + "";
     }
 }

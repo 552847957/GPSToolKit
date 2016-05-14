@@ -47,7 +47,7 @@ public class MarkList extends BaseActivity {
 
         int ID = intent.getIntExtra("ID", 0);
 
-        SharedPrefsUtil.putIntValue("MarkList", "MarkListID", ID);
+        putSharedPrefsIntValue("MarkList", "MarkListID", ID);
 
         loadUIData();
 
@@ -55,7 +55,7 @@ public class MarkList extends BaseActivity {
 
     private void loadUIData() {
 
-        int ID = SharedPrefsUtil.getIntValue("MarkList", "MarkListID", 0);
+        int ID = getSharedPrefsIntValue("MarkList", "MarkListID", 0);
 
         MarkerCategory markerCategory = this.getDaos().getMarkerCategoryDaoInstance().findById(ID);
         markerCategory.setMarkers(getDaos().getMarkerDaoInstance().queryByCategoryID(markerCategory.getId()));
@@ -104,15 +104,13 @@ public class MarkList extends BaseActivity {
                 @Override
                 public void onClick(View v) {
 
-                    MyApplication.getInstance().showShortToastMessage(marker.getId() + "");
+                    Intent intent = new Intent();
+                    //Intent传递参数
+                    intent.putExtra("EditMarker", marker);
+
+                    gotoActivity(intent, MarkEditor.class);
 
 
-//
-//                    Intent intent = new Intent();
-//                    //Intent传递参数
-//                    intent.putExtra("ID", marker.getId());
-//
-//                     gotoActivity(intent, MarkEditor.class);
                 }
             });
 

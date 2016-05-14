@@ -36,14 +36,7 @@ public class RouterPathDao extends BaseDao<RouterPath> {
     }
 
     public RouterPath findByCode(String code) {
-        RouterPath entity = null;
-        try {
-            entity = getSelector().where("code", "=", code).findFirst();
-        } catch (DbException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return entity;
+        return findFirstByWhere("code", "=", code);
     }
 
 

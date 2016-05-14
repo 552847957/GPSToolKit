@@ -19,21 +19,6 @@ import java.util.Date;
  */
 public class GsonUtil {
 
-    public static Gson getGson() {
-        GsonBuilder gsonb = new GsonBuilder();
-        DateDeserializer ds = new DateDeserializer();
-        gsonb.registerTypeAdapter(Date.class, ds);
-        gsonb.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE);
-        Gson gson = gsonb.create();
-        return gson;
-    }
-
-    public static <T> T DeserializerSingleDataResult(String json, Type objectType) {
-        Gson gson = GsonUtil.getGson();
-        T dataResult = gson.fromJson(json, objectType);
-        return dataResult;
-    }
-
     public static class DateDeserializer implements JsonDeserializer<Date> {
 
         @Override
@@ -42,7 +27,16 @@ public class GsonUtil {
 
             String value = json.getAsJsonPrimitive().getAsString();
 
-            SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            if (value.contains("T")) {
+                value = value.replace("T", " ");
+            }
+
+            if (value.contains(".")) {
+                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+            }
+
 
             Date date = new Date();
 
@@ -56,10 +50,35 @@ public class GsonUtil {
     }
 
 
-//    public static <T> ListDataResult<T> DeserializerListDataResult(String json) {
-//        Gson gson = GsonUtil.getGson();
-//        Type projectobjectType = new TypeToken<ListDataResult<T>>() {}.getType();
-//        ListDataResult<T> listDataResult = gson.fromJson(json, projectobjectType);
-//        return listDataResult;
-//    }
+    public static Gson getGson() {
+        GsonBuilder gsonb = new GsonBuilder();
+        DateDeserializer ds = new DateDeserializer();
+        gsonb.registerTypeAdapter(Date.class, ds);
+        gsonb.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE);
+        Gson gson = gsonb.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        return gson;
+    }
+
+    public static Gson getGsonExcludeFieldsWithoutExposeAnnotation() {
+        GsonBuilder gsonb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
+        DateDeserializer ds = new DateDeserializer();
+        gsonb.registerTypeAdapter(Date.class, ds);
+        gsonb.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE);
+        Gson gson = gsonb.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        return gson;
+    }
+
+
+    public static <T> T DeserializerSingleDataResult(String json, Type objectType) {
+        Gson gson = GsonUtil.getGson();
+        T dataResult = gson.fromJson(json, objectType);
+        return dataResult;
+    }
+
+////    public static <T> ListDataResult<T> DeserializerListDataResult(String json) {
+////        Gson gson = GsonUtil.getGson();
+////        Type projectobjectType = new TypeToken<ListDataResult<T>>() {}.getType();
+////        ListDataResult<T> listDataResult = gson.fromJson(json, projectobjectType);
+////        return listDataResult;
+////    }
 }

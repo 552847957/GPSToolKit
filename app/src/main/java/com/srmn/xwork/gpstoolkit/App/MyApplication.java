@@ -15,11 +15,13 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
 import com.genymotion.api.GenymotionManager;
 import com.genymotion.api.Gps;
+import com.google.gson.Gson;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.GISLocationService;
 import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
 import com.srmn.xwork.androidlib.utils.AMapUtils;
 import com.srmn.xwork.androidlib.utils.DateTimeUtil;
+import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.NumberUtil;
 import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
@@ -320,11 +322,11 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
 
 
     private String getCurrentTackerPathCode() {
-        return SharedPrefsUtil.getStringValue(GPS_TOOL_KIT, KEY_CURRENT_TACKER_PATH_CODE, "");
+        return getSharedPrefsStringValue(GPS_TOOL_KIT, KEY_CURRENT_TACKER_PATH_CODE, "");
     }
 
     private void setCurrentTackerPathCode(String currentTackerPathCode) {
-        SharedPrefsUtil.putStringValue(GPS_TOOL_KIT, KEY_CURRENT_TACKER_PATH_CODE, currentTackerPathCode);
+        putSharedPrefsStringValue(GPS_TOOL_KIT, KEY_CURRENT_TACKER_PATH_CODE, currentTackerPathCode);
     }
 
     public RouterPath getCurrentTackerPath() {
@@ -348,6 +350,90 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
             }
 
         }
+    }
+
+
+    /**
+     * 存储数据(Long)
+     */
+    public void putSharedPrefsLongValue(String name, String key, long value) {
+        this.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putLong(key, value).commit();
+    }
+
+    /**
+     * 存储数据(Int)
+     */
+    public void putSharedPrefsIntValue(String name, String key, int value) {
+        this.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putInt(key, value).commit();
+    }
+
+    /**
+     * 存储数据(String)
+     */
+    public void putSharedPrefsStringValue(String name, String key, String value) {
+        this.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putString(key, value).commit();
+    }
+
+    /**
+     * 存储数据(boolean)
+     */
+    public void putSharedPrefsBooleanValue(String name, String key,
+                                           boolean value) {
+        this.getSharedPreferences(name, Context.MODE_PRIVATE).edit().putBoolean(key, value).commit();
+    }
+
+    /**
+     * 存储数据(JSON Object)
+     */
+    public <T> void putSharedPrefsJSonValue(String name, String key, T obj) {
+        if (obj == null) {
+            putSharedPrefsStringValue(name, key, "");
+            return;
+        }
+
+        Gson gson = GsonUtil.getGson();
+
+        putSharedPrefsStringValue(name, key, gson.toJson(obj));
+    }
+
+
+    public <T> T getSharedPrefsJSonValue(String name, String key, Class<T> classOfT) {
+        String json = getSharedPrefsStringValue(name, key, "");
+
+        if (json == null)
+            return null;
+
+        Gson gson = GsonUtil.getGson();
+
+        T obj = gson.fromJson(json, classOfT);
+
+        return obj;
+    }
+
+    public String getSharedPrefsStringValue(String name, String key, String defValue) {
+        return this.getSharedPreferences(name, Context.MODE_PRIVATE).getString(key, defValue);
+    }
+
+    /**
+     * 取出数据(Long)
+     */
+    public long getSharedPrefsLongValue(String name, String key, long defValue) {
+        return this.getSharedPreferences(name, Context.MODE_PRIVATE).getLong(key, defValue);
+    }
+
+    /**
+     * 取出数据(int)
+     */
+    public int getSharedPrefsIntValue(String name, String key, int defValue) {
+        return this.getSharedPreferences(name, Context.MODE_PRIVATE).getInt(key, defValue);
+    }
+
+    /**
+     * 取出数据(boolean)
+     */
+    public boolean getSharedPrefsBooleanValue(String name, String key,
+                                              boolean defValue) {
+        return this.getSharedPreferences(name, Context.MODE_PRIVATE).getBoolean(key, defValue);
     }
 
 }
