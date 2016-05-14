@@ -1,6 +1,8 @@
 package com.srmn.xwork.gpstoolkit;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,12 +16,15 @@ import android.widget.TextView;
 
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
+import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -89,6 +94,8 @@ public class MarkList extends BaseActivity {
                 viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
                 viewHolder.txtInfo = (TextView) view.findViewById(R.id.txtInfo);
                 viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+                viewHolder.btnEdit = (Button) view.findViewById(R.id.btnEdit);
+                viewHolder.btnDelete = (Button) view.findViewById(R.id.btnDelete);
                 view.setTag(viewHolder);
             } else {
                 view = convertView;
@@ -100,19 +107,40 @@ public class MarkList extends BaseActivity {
             viewHolder.txtLocation.setText(marker.getLocationInfo());
             viewHolder.txtName.setText(marker.getName() + "");
 
-            viewHolder.ll_item.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener editHandler = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent intent = new Intent();
                     //Intent传递参数
                     intent.putExtra("EditMarker", marker);
-
                     gotoActivity(intent, MarkEditor.class);
+                }
+            };
 
+            viewHolder.ll_item.setOnClickListener(editHandler);
+            viewHolder.btnEdit.setOnClickListener(editHandler);
+
+            View.OnClickListener deleteHandler = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    UIUtil.showConfrim(context, "确定确认", "确定删除该标注？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            try {
+                                getDaos().getMarkerDaoInstance().delete(marker);
+                                loadUIData();
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                                showShortToastMessage("删除失败：" + e.getMessage());
+                            }
+                        }
+                    });
 
                 }
-            });
+            };
+
+            viewHolder.btnDelete.setOnClickListener(deleteHandler);
 
             return view;
         }
@@ -123,6 +151,8 @@ public class MarkList extends BaseActivity {
             public TextView txtDesciption;
             public TextView txtInfo;
             public LinearLayout ll_item;
+            public Button btnEdit;
+            public Button btnDelete;
         }
     }
 }

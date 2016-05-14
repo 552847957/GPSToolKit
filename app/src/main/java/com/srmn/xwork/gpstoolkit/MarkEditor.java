@@ -173,7 +173,7 @@ public class MarkEditor extends BaseActivity {
             txtLocationInfo.setText(marker.getLocationInfo());
             txtRemark.setText(marker.getDescription());
             UIUtil.setSpinnerItemSelectedByValue(spnCategory, marker.getMarkerCategoryID() + "", "Id", Integer.class);
-
+            reloadImages();
             //editData.setMarkerCategoryID(markerCategory.getId());
 
         }
