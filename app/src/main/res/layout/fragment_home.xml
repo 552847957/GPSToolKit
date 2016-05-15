@@ -40,20 +40,6 @@
                     />
 
 
-                <com.beardedhen.androidbootstrap.AwesomeTextView
-                    android:id="@+id/iconStatus1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:textSize="50sp"
-                    android:visibility="gone"
-                    app:bootstrapBrand="success"
-                    app:fontAwesomeIcon="fa_refresh"
-
-                    />
-
                 <TextView
                     android:id="@+id/txtConectText"
                     android:layout_width="wrap_content"
@@ -154,17 +140,6 @@
                         android:layout_marginLeft="5dp"
                         android:textSize="12sp"
                         android:visibility="visible"
-                        app:fontAwesomeIcon="fa_rss"
-
-                        />
-
-                    <com.beardedhen.androidbootstrap.AwesomeTextView
-                        android:id="@+id/iconGPSStatus1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="12sp"
-                        android:visibility="gone"
                         app:fontAwesomeIcon="fa_rss"
 
                         />

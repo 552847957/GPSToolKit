@@ -50,6 +50,7 @@ public class ShowMap extends BaseActivity implements AMap.OnMarkerClickListener,
             aMap.setOnMapLoadedListener(this);// 设置amap加载成功事件监听器
             aMap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
             aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
+            aMap.setOnMarkerClickListener(this);// 设置点击marker事件监听器
         }
 
     }

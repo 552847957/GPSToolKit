@@ -37,19 +37,35 @@ public class AMapHelper {
                 .icon(BitmapDescriptorFactory.fromResource(showMarker.getIconResourseID())));
     }
 
+    public static MarkerOptions generateMarkerOptions(ShowMarker showMarker) {
+        return new MarkerOptions().anchor(0.5f, 0.5f)
+                .position(new LatLng(showMarker.getLat(), showMarker.getLng()))
+                .title(showMarker.getTitle())
+                .snippet(showMarker.getTitle() + " 222");
+    }
+
     public static void showMarkersOnView(AMap aMap, List<ShowMarker> showMarkers) {
 
-        List<LatLng> points = new ArrayList<>();
+//        List<LatLng> points = new ArrayList<>();
+//
+//        for (ShowMarker showMarket : showMarkers) {
+//            Marker marker = drawMarkerOnView(aMap, showMarket);
+//            points.add(marker.getPosition());
+//        }
+//
 
-        for (ShowMarker showMarket : showMarkers) {
-            Marker marker = drawMarkerOnView(aMap, showMarket);
-            points.add(marker.getPosition());
-        }
 
-        if (points.size() > 1) {
-            setViewFit(aMap, points, 50);
+        if (showMarkers.size() > 1) {
+            ArrayList<MarkerOptions> markerOptionses = new ArrayList<>();
+
+            for (ShowMarker showMarker : showMarkers) {
+                markerOptionses.add(generateMarkerOptions(showMarker));
+            }
+
+            aMap.addMarkers(markerOptionses, true);
         } else {
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(points.get(0), 11));
+            Marker marker = aMap.addMarker(generateMarkerOptions(showMarkers.get(0)));
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 11));
         }
     }
 

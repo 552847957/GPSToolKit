@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -52,10 +54,6 @@ public class HomeFragment extends BaseFragment {
 
     @ViewInject(R.id.iconStatus)
     protected AwesomeTextView iconStatus;
-    @ViewInject(R.id.iconGPSStatus1)
-    protected AwesomeTextView iconGPSStatus1;
-    @ViewInject(R.id.iconStatus1)
-    protected AwesomeTextView iconStatus1;
     @ViewInject(R.id.iconGPSStatus)
     protected AwesomeTextView iconGPSStatus;
     @ViewInject(R.id.txtGPSConnectInfo)
@@ -239,21 +237,15 @@ public class HomeFragment extends BaseFragment {
         if (connnectSatellites <= 0) {
             txtGPSConnectInfo.setText("正在等待GPS校准 ");
             txtConectText.setText("连接中");
-            iconGPSStatus.setVisibility(View.VISIBLE);
-            iconGPSStatus1.setVisibility(View.GONE);
-
-            iconStatus.setVisibility(View.VISIBLE);
-            iconStatus1.setVisibility(View.GONE);
-
             iconStatus.startRotate(true, AwesomeTextView.AnimationSpeed.SLOW);
             iconGPSStatus.startFlashing(true, AwesomeTextView.AnimationSpeed.MEDIUM);
+
+
         } else {
             txtGPSConnectInfo.setText("GPS卫星已连接");
             txtConectText.setText("已连接");
-            iconGPSStatus.setVisibility(View.GONE);
-            iconGPSStatus1.setVisibility(View.VISIBLE);
-            iconStatus.setVisibility(View.GONE);
-            iconStatus1.setVisibility(View.VISIBLE);
+            iconStatus.clearAnimation();
+            iconGPSStatus.clearAnimation();
 
         }
 
@@ -271,6 +263,8 @@ public class HomeFragment extends BaseFragment {
 
 
     public void setLocation(GISLocation loc) {
+
+
         if (loc == null) {
             txtlng.setText(String.format("经度：%3.6f", 0));
             txtlat.setText(String.format("纬度：%3.6f", 0));
