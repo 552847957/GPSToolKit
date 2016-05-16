@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 
 
 import com.srmn.xwork.androidlib.ui.MyApplication;
@@ -16,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -33,10 +35,10 @@ public class IOUtil {
                 Environment.MEDIA_MOUNTED);
     }
 
-    public static void copyBigDataToSD(String bigDataFileName, String strOutFileName) throws IOException {
+    public static void copyBigAssetDataToSD(String bigDataFileName, String strOutFileName, Context context) throws IOException {
         InputStream myInput;
         OutputStream myOutput = new FileOutputStream(strOutFileName);
-        myInput = MyApplication.getInstance().getAssets().open(bigDataFileName);
+        myInput = context.getAssets().open(bigDataFileName);
         byte[] buffer = new byte[1024];
         int length = myInput.read(buffer);
         while (length > 0) {
@@ -218,6 +220,22 @@ public class IOUtil {
 
     }
 
+    // 将字符串写入到文本文件中
+    public static void writeTxtToFile(String content, String filePath) {
+        try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            RandomAccessFile raf = new RandomAccessFile(file, "rwd");
+            raf.seek(file.length());
+            raf.write(content.getBytes("utf-8"));
+            raf.close();
+        } catch (Exception e) {
+            Log.e("TestFile", "Error on write File:" + e);
+        }
+    }
+
 
     public static void saveTextFile(String fileName, String content, Context context) throws Exception {
 
@@ -232,7 +250,7 @@ public class IOUtil {
         // 如果希望文件被其他应用读和写，可以传入：
         // openFileOutput("output.txt", Context.MODE_WORLD_READABLE + Context.MODE_WORLD_WRITEABLE);
 
-        FileOutputStream fos = context.openFileOutput(fileName, context.MODE_PRIVATE);
+        FileOutputStream fos = context.openFileOutput(fileName, context.MODE_WORLD_READABLE);
         fos.write(content.getBytes());
         fos.close();
     }
@@ -247,7 +265,7 @@ public class IOUtil {
         // 如果希望文件被其他应用读和写，可以传入：
         // openFileOutput("output.txt", Context.MODE_WORLD_READABLE + Context.MODE_WORLD_WRITEABLE);
 
-        FileOutputStream fos = context.openFileOutput(filePath, context.MODE_PRIVATE);
+        FileOutputStream fos = context.openFileOutput(filePath, context.MODE_WORLD_READABLE);
         fos.write(content);
         fos.close();
     }

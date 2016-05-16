@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,20 +20,21 @@ import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
 import com.srmn.xwork.androidlib.utils.ClipboardUtil;
 import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
+import com.srmn.xwork.androidlib.utils.NumberUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.App.BaseFragment;
 import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
+import org.apache.commons.io.FileUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -210,14 +207,20 @@ public class LocationFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
 
-                    String baseDir = IOUtil.getDiskFilesBaseDir() + "/GPStoolKit/export_data" + "/" + markerCategory.getName().replace(" ", "") + "/";
+                    String baseDir = IOUtil.getDiskCacheDir(context) + "/export_data/" + markerCategory.getName().replace(" ", "") + "/";
 
                     File file = new File(baseDir);
 
-                    if (file.exists())
-                        file.delete();
+                    if (file.exists()) {
+                        try {
+                            FileUtils.deleteDirectory(file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                    file.mkdir();
+
+                    file.mkdirs();
 
                     String csvFilePath = baseDir + "datafile.csv";
 
@@ -232,21 +235,44 @@ public class LocationFragment extends BaseFragment {
 
                     int number = 0;
 
-
                     for (Marker marker : markerCategory.getMarkers()) {
                         number++;
-                        sbcsv.append("\"" + marker.getName() + "\",\"" + marker.getDescription() + "\",\"" + marker.getLongitude() + "\",\"" + marker.getLatitude() + "\",\"" + number + "\"\r\n");
+                        sbcsv.append("\"" + marker.getName() + "\",\"" + marker.getDescription() + "\",\"" + marker.getLongitude() + "\",\"" + marker.getLatitude() + "\",\"" + NumberUtil.GetCode(number, 3) + "\"\r\n");
                     }
 
                     try {
-                        IOUtil.saveTextFile(csvFilePath, sbcsv.toString(), context);
+                        IOUtil.writeTxtToFile(sbcsv.toString(), csvFilePath);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    MyApplication.getInstance().showLongToastMessage("数据成功导出到目录" + file.getAbsolutePath());
+                    int i = 0;
+                    for (Marker marker : markerCategory.getMarkers()) {
+                        i++;
+                        String baseFileFormat = baseDir + NumberUtil.GetCode(i, 3) + "_%s_%s";
+                        int j = 0;
+                        for (String filePath : marker.getImagesList()) {
+                            j++;
+                            File copyfile = new File(filePath);
 
-                    ClipboardUtil.copyTextToClipboard(context, "GPS工具箱导出路径", file.getAbsolutePath());
+                            if (!copyfile.exists())
+                                continue;
+                            String copyToFileName = String.format(baseFileFormat, j, copyfile.getName());
+
+                            if (!copyToFileName.toLowerCase().endsWith(".png")) {
+                                copyToFileName += ".png";
+                            }
+                            try {
+                                FileUtils.copyFile(copyfile, new File(copyToFileName));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    MyApplication.getInstance().showLongToastMessage("数据成功导出到目录" + baseDir);
+
+                    ClipboardUtil.copyTextToClipboard(context, "GPS工具箱导出路径", baseDir);
 
                 }
             });
