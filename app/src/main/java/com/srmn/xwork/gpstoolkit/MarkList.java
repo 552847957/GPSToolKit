@@ -14,11 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.gson.Gson;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.ShowMarker;
 import com.srmn.xwork.androidlib.maps.ShowMap;
 import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.ui.MutiImageView;
+import com.srmn.xwork.androidlib.ui.SingleImageView;
 import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
@@ -99,9 +102,10 @@ public class MarkList extends BaseActivity {
                 viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
                 viewHolder.txtInfo = (TextView) view.findViewById(R.id.txtInfo);
                 viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
-                viewHolder.btnEdit = (Button) view.findViewById(R.id.btnEdit);
-                viewHolder.btnDelete = (Button) view.findViewById(R.id.btnDelete);
-                viewHolder.btnShow = (Button) view.findViewById(R.id.btnShow);
+                viewHolder.btnEdit = (BootstrapButton) view.findViewById(R.id.btnEdit);
+                viewHolder.btnDelete = (BootstrapButton) view.findViewById(R.id.btnDelete);
+                viewHolder.btnShow = (BootstrapButton) view.findViewById(R.id.btnShow);
+                viewHolder.btnImage = (BootstrapButton) view.findViewById(R.id.btnImage);
 
                 view.setTag(viewHolder);
             } else {
@@ -121,6 +125,11 @@ public class MarkList extends BaseActivity {
                     //Intent传递参数
                     intent.putExtra("EditMarker", marker);
                     gotoActivity(intent, MarkEditor.class);
+//                    Intent intent = new Intent();
+//                    //Intent传递参数
+//                    intent.putExtra("EditMarker", marker);
+//                    gotoActivity(intent, SingleImageView.class);
+
                 }
             };
 
@@ -177,6 +186,21 @@ public class MarkList extends BaseActivity {
             viewHolder.btnShow.setOnClickListener(showMapHandler);
 
 
+            View.OnClickListener showImageHandler = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent();
+                    //Intent传递参数
+                    intent.putExtra("imagePaths", marker.getImages());
+                    gotoActivity(intent, MutiImageView.class);
+
+                }
+            };
+
+            viewHolder.btnImage.setOnClickListener(showImageHandler);
+
+
 
             return view;
         }
@@ -187,9 +211,10 @@ public class MarkList extends BaseActivity {
             public TextView txtDesciption;
             public TextView txtInfo;
             public LinearLayout ll_item;
-            public Button btnEdit;
-            public Button btnDelete;
-            public Button btnShow;
+            public BootstrapButton btnEdit;
+            public BootstrapButton btnDelete;
+            public BootstrapButton btnShow;
+            public BootstrapButton btnImage;
 
         }
     }

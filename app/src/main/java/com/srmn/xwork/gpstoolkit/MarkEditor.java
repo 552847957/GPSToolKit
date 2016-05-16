@@ -26,12 +26,14 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.media.PhotoAction;
 import com.srmn.xwork.androidlib.ui.BaseArrayAdapter;
+import com.srmn.xwork.androidlib.ui.SingleImageView;
 import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.ImageUtil;
@@ -68,7 +70,7 @@ public class MarkEditor extends BaseActivity {
     @ViewInject(R.id.txtLocationInfo)
     protected TextView txtLocationInfo;
     @ViewInject(R.id.btnManageCategory)
-    protected Button btnManageCategory;
+    protected BootstrapButton btnManageCategory;
     @ViewInject(R.id.spnCategory)
     protected Spinner spnCategory;
 
@@ -442,8 +444,14 @@ public class MarkEditor extends BaseActivity {
                         showShortToastMessage("图片不存在.");
                         return;
                     }
-                    Intent openImageIntent = IntentUtil.openImage(file.getPath());
-                    startActivity(openImageIntent);
+
+                    Intent intent = new Intent();
+                    //Intent传递参数
+                    intent.putExtra("imagePath", file.getPath());
+                    gotoActivity(intent, SingleImageView.class);
+
+//                    Intent openImageIntent = IntentUtil.openImage(file.getPath());
+//                    startActivity(openImageIntent);
                 }
             });
 

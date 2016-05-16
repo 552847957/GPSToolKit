@@ -8,14 +8,14 @@ bugly {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.srmn.xwork.gpstoolkit"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 5
-        versionName "1.0.3"
+        versionCode 13
+        versionName "1.0.7"
     }
     buildTypes {
         release {

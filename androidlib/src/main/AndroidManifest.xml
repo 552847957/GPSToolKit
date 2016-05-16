@@ -35,7 +35,9 @@
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:theme="@android:style/Theme.Translucent" />
-        <activity android:name=".maps.ShowMap"></activity>
+        <activity android:name=".maps.ShowMap" />
+        <activity android:name=".ui.SingleImageView" />
+        <activity android:name=".ui.MutiImageView"></activity>
     </application>
 
 </manifest>

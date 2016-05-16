@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.gson.Gson;
 import com.srmn.xwork.androidlib.gis.ShowMarker;
 import com.srmn.xwork.androidlib.maps.ShowMap;
@@ -155,9 +156,9 @@ public class LocationFragment extends BaseFragment {
                 viewHolder = new ViewHolder();
                 viewHolder.txtDesciption = (TextView) view.findViewById(R.id.txtDesciption);
                 viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
-                viewHolder.btnPublish = (Button) view.findViewById(R.id.btnPublish);
-                viewHolder.btnExport = (Button) view.findViewById(R.id.btnExport);
-                viewHolder.btnMap = (Button) view.findViewById(R.id.btnMap);
+                viewHolder.btnPublish = (BootstrapButton) view.findViewById(R.id.btnPublish);
+                viewHolder.btnExport = (BootstrapButton) view.findViewById(R.id.btnExport);
+                viewHolder.btnMap = (BootstrapButton) view.findViewById(R.id.btnMap);
                 viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
                 view.setTag(viewHolder);
             } else {
@@ -256,9 +257,9 @@ public class LocationFragment extends BaseFragment {
         class ViewHolder {
             public TextView txtName;
             public TextView txtDesciption;
-            public Button btnPublish;
-            public Button btnExport;
-            public Button btnMap;
+            public BootstrapButton btnPublish;
+            public BootstrapButton btnExport;
+            public BootstrapButton btnMap;
             public LinearLayout ll_item;
         }
     }

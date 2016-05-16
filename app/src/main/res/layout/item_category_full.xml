@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content" android:layout_marginBottom="5dp"  android:orientation="vertical">
 
 
@@ -39,35 +40,47 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp" android:background="@color/c_cool_grey"></LinearLayout>
+        android:layout_height="1dp"
+        android:background="@color/c_light_grey"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_weight="1" />
 
-        <Button
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnPublish"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="发布到云图" />
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            app:showOutline="true"
+            android:text="发布到云图" />
 
-        <Button
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            app:showOutline="true"
             android:text="查看地图" />
 
-        <Button
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnExport"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="导出数据" />
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            app:showOutline="true"
+            android:text="导出数据" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp" android:background="@color/c_cool_grey"></LinearLayout>
+        android:layout_height="1dp"
+        android:background="@color/c_light_grey"></LinearLayout>
 </LinearLayout>
