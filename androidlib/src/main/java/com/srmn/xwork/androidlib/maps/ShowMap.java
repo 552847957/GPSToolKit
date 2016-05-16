@@ -8,6 +8,7 @@ import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.amap.api.maps.*;
 import com.amap.api.maps.AMap;
@@ -24,12 +25,13 @@ import com.srmn.xwork.androidlib.utils.GsonUtil;
 
 import java.util.List;
 
-public class ShowMap extends BaseActivity implements AMap.OnMarkerClickListener,
-        AMap.OnInfoWindowClickListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter {
+public abstract class ShowMap extends BaseActivity implements AMap.OnMarkerClickListener,
+        AMap.OnInfoWindowClickListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, AMap.OnMapClickListener {
 
     private com.amap.api.maps.AMap aMap;
     private MapView mapView;
     private Handler mainhandler = new Handler();
+    private Marker currentMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class ShowMap extends BaseActivity implements AMap.OnMarkerClickListener,
             aMap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
             aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
             aMap.setOnMarkerClickListener(this);// 设置点击marker事件监听器
+            aMap.setOnMapClickListener(this);
         }
 
     }
@@ -62,6 +65,7 @@ public class ShowMap extends BaseActivity implements AMap.OnMarkerClickListener,
             Gson gson = GsonUtil.getGson();
             List<ShowMarker> markers = gson.fromJson(json, new TypeToken<List<ShowMarker>>() {
             }.getType());
+
             AMapHelper.showMarkersOnView(aMap, markers);
         }
     }
@@ -111,30 +115,53 @@ public class ShowMap extends BaseActivity implements AMap.OnMarkerClickListener,
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
+        currentMarker = marker;
+        marker.showInfoWindow();
     }
 
     @Override
     public void onMapLoaded() {
-
-
         setUpMap();
         show();
     }
 
+    // 点击非marker区域，将显示的InfoWindow隐藏
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (currentMarker != null) {
+            currentMarker.hideInfoWindow();
+        }
+    }
+
     @Override
     public boolean onMarkerClick(Marker marker) {
-        marker.showInfoWindow();
+        currentMarker = marker;
         return false;
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-        return null;
+        if (getInfoWindowView() == 0)
+            return null;
+        View infoWindow = getLayoutInflater().inflate(getInfoWindowView(), null);
+        render(marker, infoWindow);
+        return infoWindow;
     }
+
+    public abstract int getInfoWindowView();
+
+    /**
+     * 自定义infowinfow窗口，动态修改内容的
+     */
+    public abstract void render(Marker marker, View view);
+
 
     @Override
     public View getInfoContents(Marker marker) {
-        return null;
+        if (getInfoWindowView() == 0)
+            return null;
+        View infoContent = getLayoutInflater().inflate(getInfoWindowView(), null);
+        render(marker, infoContent);
+        return infoContent;
     }
 }

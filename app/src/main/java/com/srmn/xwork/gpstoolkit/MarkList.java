@@ -165,11 +165,14 @@ public class MarkList extends BaseActivity {
 
                     List<ShowMarker> showMarkers = new ArrayList<>();
 
+                    Gson gson1 = GsonUtil.getGson();
+
                     ShowMarker showMarker = new ShowMarker();
                     showMarker.setTitle(marker.getName());
                     showMarker.setLat(marker.getLatitude());
                     showMarker.setLng(marker.getLongitude());
                     showMarker.setIconResourseID(R.drawable.poi_marker_pressed);
+                    showMarker.setJsonData(gson1.toJson(marker));
 
                     showMarkers.add(showMarker);
 
@@ -178,7 +181,7 @@ public class MarkList extends BaseActivity {
                     Intent intent = new Intent();
                     //Intent传递参数
                     intent.putExtra("showMarkers", gson.toJson(showMarkers));
-                    gotoActivity(intent, ShowMap.class);
+                    gotoActivity(intent, ShowMarkerMap.class);
 
                 }
             };

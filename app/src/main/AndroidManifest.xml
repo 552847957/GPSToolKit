@@ -83,6 +83,9 @@
         <!-- 反馈组件 END -->
 
         <activity android:name=".MarkList"></activity>
+
+        <activity android:name=".ShowMarkerMap"></activity>
+
     </application>
 
 </manifest>

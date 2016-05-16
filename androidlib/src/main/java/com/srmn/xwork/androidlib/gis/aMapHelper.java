@@ -43,7 +43,6 @@ public class AMapHelper {
                 .title(showMarker.getTitle())
                 .snippet(showMarker.getTitle() + " 222");
     }
-
     public static void showMarkersOnView(AMap aMap, List<ShowMarker> showMarkers) {
 
 //        List<LatLng> points = new ArrayList<>();
@@ -62,9 +61,15 @@ public class AMapHelper {
                 markerOptionses.add(generateMarkerOptions(showMarker));
             }
 
-            aMap.addMarkers(markerOptionses, true);
+            ArrayList<Marker> markers = aMap.addMarkers(markerOptionses, true);
+
+            for (int i = 0; i < markers.size(); i++) {
+                markers.get(i).setObject(showMarkers.get(i));
+            }
+
         } else {
             Marker marker = aMap.addMarker(generateMarkerOptions(showMarkers.get(0)));
+            marker.setObject(showMarkers.get(0));
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 11));
         }
     }

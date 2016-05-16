@@ -172,11 +172,13 @@ public class LocationFragment extends BaseFragment {
                     List<ShowMarker> showMarkers = new ArrayList<>();
 
                     for (Marker marker : markerCategory.getMarkers()) {
+                        Gson gson1 = GsonUtil.getGson();
                         ShowMarker showMarker = new ShowMarker();
                         showMarker.setTitle(marker.getName());
                         showMarker.setLat(marker.getLatitude());
                         showMarker.setLng(marker.getLongitude());
                         showMarker.setIconResourseID(R.drawable.poi_marker_pressed);
+                        showMarker.setJsonData(gson1.toJson(marker));
                         showMarkers.add(showMarker);
                     }
 
@@ -186,7 +188,7 @@ public class LocationFragment extends BaseFragment {
                     Intent intent = new Intent();
                     //Intent传递参数
                     intent.putExtra("showMarkers", gson.toJson(showMarkers));
-                    ((BaseActivity) getActivity()).gotoActivity(intent, ShowMap.class);
+                    ((BaseActivity) getActivity()).gotoActivity(intent, ShowMarkerMap.class);
                 }
             });
 
