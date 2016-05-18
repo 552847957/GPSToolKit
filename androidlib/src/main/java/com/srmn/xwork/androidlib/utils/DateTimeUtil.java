@@ -60,6 +60,11 @@ public class DateTimeUtil {
         return new SimpleDateFormat(format).format(dateTime);
     }
 
+    public static long GetTimeChangeSecond(Date startDateTime, Date endDateTime) {
+        return (endDateTime.getTime() - startDateTime.getTime()) / 1000;
+    }
+
+
 
     public static Date BuildDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();

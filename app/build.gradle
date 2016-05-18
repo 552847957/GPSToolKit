@@ -14,8 +14,8 @@ android {
         applicationId "com.srmn.xwork.gpstoolkit"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 16
-        versionName "1.1.0"
+        versionCode 18
+        versionName "1.1.2"
     }
     buildTypes {
         release {

@@ -20,6 +20,7 @@ import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.maps.MyLocation;
 import com.srmn.xwork.androidlib.maps.offlinemap.OfflineMapActivity;
 import com.srmn.xwork.androidlib.ui.MyApplication;
+import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.NumberUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseFragment;
 
@@ -28,6 +29,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -125,12 +127,11 @@ public class HomeFragment extends BaseFragment {
 
         switch (index) {
             case 1:
-//                if( ((Main)this.getActivity()).ConnectToGPS())
-//                {
-//                    MyApplication.getInstance().showShortToastMessage("未能连接到GPS卫星");
-//                    return;
-//                }
-
+                Main main = (Main) this.getActivity();
+                if (main != null && main.getCurrentLocation() != null && DateTimeUtil.GetTimeChangeSecond(main.getCurrentLocation().getLocationTime(), new Date()) > 20) {
+                    MyApplication.getInstance().showShortToastMessage("最近20秒以内未能获取最新的定位信息。");
+                    return;
+                }
                 ((Main) this.getActivity()).newMark();
                 break;
             case 2:
@@ -232,6 +233,20 @@ public class HomeFragment extends BaseFragment {
 
     public void setGPSSatellites(int maxSatellites, int connnectSatellites) {
 
+        if (txtGPSConnectInfo == null)
+            return;
+        if (txtConectText == null)
+            return;
+        if (iconStatus == null)
+            return;
+        if (iconGPSStatus == null)
+            return;
+        if (imgGPSConnectSatellitesInfo == null)
+            return;
+        if (txtGPSConnectSatellitesInfo == null)
+            return;
+        if (txtGPSFindSatellitesInfo == null)
+            return;
 
 
         if (connnectSatellites <= 0) {
@@ -264,6 +279,15 @@ public class HomeFragment extends BaseFragment {
 
     public void setLocation(GISLocation loc) {
 
+
+        if (txtlng == null)
+            return;
+        if (txtlat == null)
+            return;
+        if (txtaltaccuracy == null)
+            return;
+        if (txtaddress == null)
+            return;
 
         if (loc == null) {
             txtlng.setText(String.format("经度：%3.6f", 0));

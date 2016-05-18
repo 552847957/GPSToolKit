@@ -30,14 +30,21 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name=".maps.MyLocation" />
-        <activity android:name=".maps.AMap" />
+        <activity
+            android:name=".maps.MyLocation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".maps.AMap"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:theme="@android:style/Theme.Translucent" />
-        <activity android:name=".maps.ShowMap" />
-        <activity android:name=".ui.SingleImageView" />
-        <activity android:name=".ui.MutiImageView"></activity>
+        <activity
+            android:name=".ui.SingleImageView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MutiImageView"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

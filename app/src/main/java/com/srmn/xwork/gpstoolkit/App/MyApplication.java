@@ -300,6 +300,7 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
 
         double distance = 0;
 
+
         if (subItems.size() >= 2) {
             for (int i = 1; i < subItems.size(); i++) {
                 distance = distance + AMapUtils.calculateLineDistance(subItems.get(i - 1).getLatitude(), subItems.get(i - 1).getLongitude(), subItems.get(i).getLatitude(), subItems.get(i).getLongitude());

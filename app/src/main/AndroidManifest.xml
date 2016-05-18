@@ -76,15 +76,23 @@
         <activity
             android:name=".RecordLcation"
             android:screenOrientation="portrait" />
-        <activity android:name=".TrackerMap" />
-        <activity android:name=".TrackerMapShow" />
+        <activity
+            android:name=".TrackerMap"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TrackerMapShow"
+            android:screenOrientation="portrait" />
         <!-- 反馈组件（若使用该功能，需添加以下声明）START -->
         <activity android:name="com.avos.avoscloud.feedback.ThreadActivity" />
         <!-- 反馈组件 END -->
 
-        <activity android:name=".MarkList"></activity>
+        <activity
+            android:name=".MarkList"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ShowMarkerMap"></activity>
+        <activity
+            android:name=".ShowMarkerMap"
+            android:screenOrientation="portrait"></activity>
 
     </application>
 

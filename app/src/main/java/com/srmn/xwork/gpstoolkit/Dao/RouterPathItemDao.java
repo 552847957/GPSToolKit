@@ -36,6 +36,10 @@ public class RouterPathItemDao extends BaseDao<RouterPathItem> {
             ex.printStackTrace();
         }
 
+        if (lst == null) {
+            lst = new ArrayList<RouterPathItem>();
+        }
+
         return lst;
     }
 }

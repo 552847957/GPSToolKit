@@ -36,9 +36,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.beardedhen:androidbootstrap:2.2.0'
     compile 'org.apache.commons:commons-io:1.3.2'
+    compile 'org.apache.commons:commons-compress:1.11'
+    compile 'org.apache.commons:commons-csv:1.3'
     compile 'com.cesarferreira.colorize:library:0.2.1'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
-
 }

@@ -113,13 +113,7 @@ public class Main extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mainhandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                /***** 检查更新 *****/
-                Beta.checkUpgrade();
-            }
-        }, 2000);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -139,6 +133,14 @@ public class Main extends BaseActivity
         mTabLayout.setupWithViewPager(mViewPager);
 
         openGPSSettings();
+
+        mainhandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                /***** 检查更新 *****/
+                Beta.checkUpgrade();
+            }
+        }, 3000);
 
     }
 
