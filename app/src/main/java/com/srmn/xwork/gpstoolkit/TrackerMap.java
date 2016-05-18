@@ -1,7 +1,9 @@
 package com.srmn.xwork.gpstoolkit;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -28,6 +30,7 @@ import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
 import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.ServiceUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
+import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
@@ -292,8 +295,16 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
                     showShortToastMessage("轨迹跟踪未开始，请先开始！");
                     return;
                 }
-                getMyApp().endCurrentTracePath();
-                finish();
+
+                UIUtil.showConfrim(this, "警告", "确定停止轨迹跟踪？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getMyApp().endCurrentTracePath();
+                        finish();
+                    }
+                });
+
+
                 break;
         }
 

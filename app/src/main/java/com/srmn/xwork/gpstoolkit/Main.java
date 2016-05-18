@@ -233,6 +233,11 @@ public class Main extends BaseActivity
             return;
         }
 
+        if (getCurrentLocation().getLatitude() < 1 || getCurrentLocation().getLongitude() < 1) {
+            getMyApp().showShortToastMessage("没有位置信息,无法发布");
+            return;
+        }
+
         Marker marker = new Marker(getCurrentLocation());
 
         Intent intent = new Intent();

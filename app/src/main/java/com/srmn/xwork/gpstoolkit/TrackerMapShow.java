@@ -1,7 +1,9 @@
 package com.srmn.xwork.gpstoolkit;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -28,6 +30,7 @@ import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.DeviceUtils;
 import com.srmn.xwork.androidlib.utils.ServiceUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
+import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
@@ -224,9 +227,16 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
                 }
 
 
-                SaveRouterPathTask saveRouterPathTask = new SaveRouterPathTask(this, "上传数据", "开始上传数据", "数据上传中%s");
+                UIUtil.showConfrim(this, "警告", "确定上传轨迹跟踪数据？", R.drawable.ic_info_grey600_18dp, "确定", "取消", new Dialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SaveRouterPathTask saveRouterPathTask = new SaveRouterPathTask(context, "上传数据", "开始上传数据", "数据上传中%s");
 
-                saveRouterPathTask.execute(routerPath);
+                        saveRouterPathTask.execute(routerPath);
+                    }
+                });
+
+
 
                 break;
         }

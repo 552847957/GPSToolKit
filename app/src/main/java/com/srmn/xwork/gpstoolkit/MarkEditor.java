@@ -38,6 +38,7 @@ import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.IOUtil;
 import com.srmn.xwork.androidlib.utils.ImageUtil;
 import com.srmn.xwork.androidlib.utils.IntentUtil;
+import com.srmn.xwork.androidlib.utils.SharedPrefsUtil;
 import com.srmn.xwork.androidlib.utils.StringUtil;
 import com.srmn.xwork.androidlib.utils.UIUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseActivity;
@@ -175,7 +176,17 @@ public class MarkEditor extends BaseActivity {
             txtName.setText(marker.getName());
             txtLocationInfo.setText(marker.getLocationInfo());
             txtRemark.setText(marker.getDescription());
-            UIUtil.setSpinnerItemSelectedByValue(spnCategory, marker.getMarkerCategoryID() + "", "Id", Integer.class);
+
+            if (marker.getId() != null && marker.getId() > 0) {
+                UIUtil.setSpinnerItemSelectedByValue(spnCategory, marker.getMarkerCategoryID() + "", "Id", Integer.class);
+            } else {
+                int addtMarkerCategoryID = SharedPrefsUtil.getIntValue(this, TAG, "AddMarkerCategoryID", 0);
+
+                if (addtMarkerCategoryID > 0) {
+                    UIUtil.setSpinnerItemSelectedByValue(spnCategory, addtMarkerCategoryID + "", "Id", Integer.class);
+                }
+            }
+
             reloadImages();
             //editData.setMarkerCategoryID(markerCategory.getId());
 
@@ -224,6 +235,9 @@ public class MarkEditor extends BaseActivity {
         try {
             if (editData.getId() == null || editData.getId().equals(0)) {
                 getMarkerDaoInstance().saveBindingId(editData);
+
+                SharedPrefsUtil.putIntValue(this, TAG, "AddMarkerCategoryID", editData.getMarkerCategoryID());
+
             } else {
                 getMarkerDaoInstance().update(editData);
             }
