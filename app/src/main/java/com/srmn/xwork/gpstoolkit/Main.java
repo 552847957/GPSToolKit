@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.srmn.xwork.androidlib.gis.GISLocation;
@@ -34,22 +35,30 @@ import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.tencent.bugly.beta.Beta;
 
 
-import org.xutils.view.annotation.ContentView;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_main)
+
 public class Main extends BaseActivity
         implements TrackerFragment.OnFragmentInteractionListener
         , LocationFragment.OnFragmentInteractionListener {
     private static final String TAG = "Main";
 
     //声明AMapLocationClient类对象
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
 
-
+    @BindView(R.id.container)
+    public ViewPager mViewPager;
+    @BindView(R.id.tl_main_tabs)
+    public TabLayout mTabLayout;
+    @BindView(R.id.toolbar)
+    public Toolbar toolbar;
     /**
      * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -59,24 +68,16 @@ public class Main extends BaseActivity
      * {@link FragmentStatePagerAdapter}.
      */
     private ViewPagerAdapter mSectionsPagerAdapter;
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
-
     private Handler mainhandler = new Handler();
-
+    private MyReceiver receiver = null;
 
     public GISLocation getCurrentLocation() {
         return getSharedPrefsJSonValue(TAG, "CurrentLocation", GISLocation.class);
     }
 
-
     public void setCurrentLocation(GISLocation currentLocation) {
         putSharedPrefsJSonValue(TAG, "CurrentLocation", currentLocation);
     }
-
 
     public GISSatelliteStatus getGisSatelliteStatus() {
         return getSharedPrefsJSonValue(TAG, "GisSatelliteStatus", GISSatelliteStatus.class);
@@ -85,9 +86,6 @@ public class Main extends BaseActivity
     public void setGisSatelliteStatus(GISSatelliteStatus gisSatelliteStatus) {
         putSharedPrefsJSonValue(TAG, "GisSatelliteStatus", gisSatelliteStatus);
     }
-
-    private MyReceiver receiver = null;
-
 
     private void openGPSSettings() {
 
@@ -114,21 +112,18 @@ public class Main extends BaseActivity
         super.onCreate(savedInstanceState);
 
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.clearFocus();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.application_map_32);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tl_main_tabs);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mSectionsPagerAdapter.addFragment(new HomeFragment(), "首页");
         mSectionsPagerAdapter.addFragment(new LocationFragment(), "位置标注");
         mSectionsPagerAdapter.addFragment(new TrackerFragment(), "线路追踪");
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
@@ -142,6 +137,11 @@ public class Main extends BaseActivity
             }
         }, 3000);
 
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_main;
     }
 
 

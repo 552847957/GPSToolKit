@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'android-apt'
 apply plugin: 'bugly'
 bugly {
     appId = '900021861'
@@ -36,4 +38,6 @@ dependencies {
     compile files('libs/okio-1.6.0-leancloud.jar')
     compile files('libs/avoscloud-feedback-v3.13.4.jar')
     compile 'com.baoyz.swipemenulistview:library:1.3.0'
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }

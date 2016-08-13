@@ -32,18 +32,23 @@ import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
 import org.xutils.ex.DbException;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 
-@ContentView(R.layout.activity_mark_list)
+
 public class MarkList extends BaseActivity {
 
-    @ViewInject(R.id.el_list)
+    @BindView(R.id.el_list)
     protected ListView el_list;
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_mark_list;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

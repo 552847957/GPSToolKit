@@ -1,5 +1,6 @@
 package com.srmn.xwork.androidlib.gis;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -7,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.LocationManager;
@@ -32,6 +34,7 @@ public class GISLocationService extends Service implements AMapLocationListener 
 
 
     public static final long LOCATION_UPDATE_MIN_TIME = 3 * 1000;
+    public static final long LOCATION_RESET_TIME = 1000 * 60 * 6;
     public static final float LOCATION_UPDATE_MIN_DISTANCE = 5;
     public static final String INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION = "INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION";
     public static final String INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS = "INTENT_ACTION_UPDATE_DATA_EXTRA_SATELLITE_STATUS";
@@ -81,7 +84,7 @@ public class GISLocationService extends Service implements AMapLocationListener 
 
         long time = SystemClock.currentThreadTimeMillis();
         am.cancel(pi);
-        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, time, 1000 * 60 * 6, pi); //每6分钟发起一次定位重置
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, time, LOCATION_RESET_TIME, pi); //每6分钟发起一次定位重置
 
 
     }
@@ -135,6 +138,7 @@ public class GISLocationService extends Service implements AMapLocationListener 
         mLocationClient.startLocation();
 
         locationManager = ((LocationManager) MyApplication.getContext().getSystemService(Context.LOCATION_SERVICE));
+
 
         locationManager.addGpsStatusListener(statusListener);
     }

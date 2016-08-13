@@ -3,11 +3,18 @@ package com.srmn.xwork.gpstoolkit;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class RecordLcation extends AppCompatActivity {
+import com.srmn.xwork.gpstoolkit.App.BaseActivity;
+
+
+public class RecordLcation extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_lcation);
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_record_lcation;
     }
 }

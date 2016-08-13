@@ -21,10 +21,12 @@ import com.srmn.xwork.gpstoolkit.App.BaseFragment;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -38,7 +40,7 @@ import java.util.List;
 public class TrackerFragment extends BaseFragment {
 
 
-    @ViewInject(R.id.el_list)
+    @BindView(R.id.el_list)
     protected ListView el_list;
     protected List<RouterPath> dataItems;
     protected RouterPathAdapter adapter;
@@ -93,11 +95,21 @@ public class TrackerFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tracker, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_tracker, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        // TODO Use fields...
+        return view;
     }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

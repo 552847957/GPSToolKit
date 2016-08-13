@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
@@ -24,13 +26,16 @@ import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.NumberUtil;
 import com.srmn.xwork.gpstoolkit.App.BaseFragment;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
+
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 
 
 /**
@@ -40,7 +45,7 @@ import java.util.HashMap;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-@ContentView(R.layout.fragment_home)
+
 public class HomeFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,29 +59,29 @@ public class HomeFragment extends BaseFragment {
 //    private OnFragmentInteractionListener mListener;
 
 
-    @ViewInject(R.id.iconStatus)
+    @BindView(R.id.iconStatus)
     protected AwesomeTextView iconStatus;
-    @ViewInject(R.id.iconGPSStatus)
+    @BindView(R.id.iconGPSStatus)
     protected AwesomeTextView iconGPSStatus;
-    @ViewInject(R.id.txtGPSConnectInfo)
+    @BindView(R.id.txtGPSConnectInfo)
     protected TextView txtGPSConnectInfo;
-    @ViewInject(R.id.txtGPSConnectSatellitesInfo)
+    @BindView(R.id.txtGPSConnectSatellitesInfo)
     protected TextView txtGPSConnectSatellitesInfo;
-    @ViewInject(R.id.txtGPSFindSatellitesInfo)
+    @BindView(R.id.txtGPSFindSatellitesInfo)
     protected TextView txtGPSFindSatellitesInfo;
-    @ViewInject(R.id.txtConectText)
+    @BindView(R.id.txtConectText)
     protected TextView txtConectText;
-    @ViewInject(R.id.txtlat)
+    @BindView(R.id.txtlat)
     protected TextView txtlat;
-    @ViewInject(R.id.txtlng)
+    @BindView(R.id.txtlng)
     protected TextView txtlng;
-    @ViewInject(R.id.txtaltaccuracy)
+    @BindView(R.id.txtaltaccuracy)
     protected TextView txtaltaccuracy;
-    @ViewInject(R.id.txtaddress)
+    @BindView(R.id.txtaddress)
     protected TextView txtaddress;
-    @ViewInject(R.id.gvMainNav)
+    @BindView(R.id.gvMainNav)
     protected GridView gvMainNav;
-    @ViewInject(R.id.imgGPSConnectSatellitesInfo)
+    @BindView(R.id.imgGPSConnectSatellitesInfo)
     protected ImageView imgGPSConnectSatellitesInfo;
 
     public HomeFragment() {
@@ -111,6 +116,22 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        // TODO Use fields...
+        return view;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
+    @Override
     public void onStart() {
         super.onStart();
         iconStatus.startRotate(true, AwesomeTextView.AnimationSpeed.SLOW);
@@ -118,9 +139,10 @@ public class HomeFragment extends BaseFragment {
         loadMainNav();
     }
 
-    @Event(value = R.id.gvMainNav, type = AdapterView.OnItemClickListener.class)
-    private void onItemClick(AdapterView adapterView, View view, int arg2, long arg3) {
-        int index = arg2 + 1;//id是从0开始的，所以需要+1
+    @OnItemClick(R.id.gvMainNav)
+    public void onItemClick(AdapterView<?> parent, View v, int aPosition,
+                            long arg3) {
+        int index = aPosition + 1;//id是从0开始的，所以需要+1
         Intent intent = new Intent();
 
         //MyApplication.getInstance().showShortToastMessage(index+"");
@@ -164,23 +186,6 @@ public class HomeFragment extends BaseFragment {
                 break;
         }
     }
-//
-//    OnGPSStatusChangedListener mListener;
-//
-//    //Container Activity must implement this interface
-//    public interface OnGPSStatusChangedListener{
-//        public void OnGPSStatusChanged(Uri articleUri);
-//    }
-//
-//    @Override
-//    public void onAttach(Context activity) {
-//        super.onAttach(activity);
-//        try{
-//            mListener =(OnGPSStatusChangedListener)activity;
-//        }catch(ClassCastException e){
-//            throw new ClassCastException(activity.toString()+"must implement OnArticleSelectedListener");
-//        }
-//    }
 
     private void loadMainNav() {
 
@@ -215,14 +220,6 @@ public class HomeFragment extends BaseFragment {
         map.put("ItemText", title);
         meumList.add(map);
     }
-
-
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
 
 
     @Override

@@ -1,11 +1,17 @@
 package com.srmn.xwork.gpstoolkit.App;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import com.srmn.xwork.gpstoolkit.Dao.DaoContainer;
+import com.srmn.xwork.gpstoolkit.R;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by kiler on 2016/2/23.
  */
-public class BaseActivity extends com.srmn.xwork.androidlib.ui.BaseActivity {
+public abstract class BaseActivity extends com.srmn.xwork.androidlib.ui.BaseActivity {
 
 
     public DaoContainer getDaos() {
@@ -16,6 +22,12 @@ public class BaseActivity extends com.srmn.xwork.androidlib.ui.BaseActivity {
         return MyApplication.getInstance();
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutID());
+        ButterKnife.bind(this);
+    }
 
     public int Dp2Px(float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -27,4 +39,5 @@ public class BaseActivity extends com.srmn.xwork.androidlib.ui.BaseActivity {
         return (int) (px / scale + 0.5f);
     }
 
+    protected abstract int getLayoutID();
 }

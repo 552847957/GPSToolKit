@@ -28,13 +28,15 @@ import com.srmn.xwork.gpstoolkit.Entities.Marker;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
 import org.apache.commons.io.FileUtils;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -45,13 +47,13 @@ import java.util.List;
  * Use the {@link LocationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-@ContentView(R.layout.fragment_location)
+
 public class LocationFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    @ViewInject(R.id.el_list)
+    @BindView(R.id.el_list)
     protected ListView el_list;
     protected List<MarkerCategory> parentData = null;
     // TODO: Rename and change types of parameters
@@ -89,6 +91,23 @@ public class LocationFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_location, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        // TODO Use fields...
+        return view;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
 
     @Override
     public void onStart() {

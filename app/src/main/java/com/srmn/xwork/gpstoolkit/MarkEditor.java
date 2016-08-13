@@ -52,43 +52,50 @@ import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import org.w3c.dom.Text;
 import org.xutils.ex.DbException;
 import org.xutils.image.ImageOptions;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-@ContentView(R.layout.activity_mark_editor)
+
 public class MarkEditor extends BaseActivity {
 
     private static final int REQUEST_CODE_MANAGECATEGORY = 5;
     private static final String TAG = "MarkEditor";
 
-    @ViewInject(R.id.txtLocationInfo)
+    @BindView(R.id.txtLocationInfo)
     protected TextView txtLocationInfo;
-    @ViewInject(R.id.btnManageCategory)
+    @BindView(R.id.btnManageCategory)
     protected BootstrapButton btnManageCategory;
-    @ViewInject(R.id.spnCategory)
+    @BindView(R.id.spnCategory)
     protected Spinner spnCategory;
 
 
-    @ViewInject(R.id.txtName)
+    @BindView(R.id.txtName)
     protected TextView txtName;
-    @ViewInject(R.id.txtRemark)
+    @BindView(R.id.txtRemark)
     protected TextView txtRemark;
 
-
+    @BindView(R.id.lstImages)
     protected ListView lstImages;
-    @ViewInject(R.id.llPhoto)
+    @BindView(R.id.llPhoto)
     protected LinearLayout llPhoto;
 
 
     protected List<MarkerCategory> dataItems;
-
+    protected PhotoAction photoAction;
+    private ArrayAdapter<MarkerCategory> spinadapter;
+    private MarkerImagesAdapter markerImagesAdapter;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     public Marker getCurrentData() {
         return getSharedPrefsJSonValue(TAG, "CurrentData", Marker.class);
@@ -97,20 +104,6 @@ public class MarkEditor extends BaseActivity {
     public void setCurrentData(Marker currentDate) {
         putSharedPrefsJSonValue(TAG, "CurrentData", currentDate);
     }
-
-    protected PhotoAction photoAction;
-
-    private ArrayAdapter<MarkerCategory> spinadapter;
-
-
-
-    private MarkerImagesAdapter markerImagesAdapter;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,8 +134,6 @@ public class MarkEditor extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        lstImages = (ListView) findViewById(R.id.lstImages);
 
         photoAction = new PhotoAction(this);
 
@@ -209,13 +200,15 @@ public class MarkEditor extends BaseActivity {
     }
 
 
-    @Event(value = R.id.btnManageCategory)
-    private void onManageCategoryClick(View view) {
+    //@Event(value = R.id.btnManageCategory)
+    @OnClick(R.id.btnManageCategory)
+    protected void onManageCategoryClick(View view) {
         gotoActivityForResult(MarkCategoryManage.class, REQUEST_CODE_MANAGECATEGORY);
     }
 
-    @Event(value = R.id.btnSave)
-    private void onbtnSaveClick(View view) {
+    // @Event(value = R.id.btnSave)
+    @OnClick(R.id.btnSave)
+    protected void onbtnSaveClick(View view) {
 
         txtName.clearFocus();
         txtLocationInfo.clearFocus();
@@ -260,19 +253,22 @@ public class MarkEditor extends BaseActivity {
     }
 
 
-    @Event(value = R.id.btnPhoto)
-    private void onbtnPhotoClick(View view) {
+    //@Event(value = R.id.btnPhoto)
+    @OnClick(R.id.btnPhoto)
+    protected void onbtnPhotoClick(View view) {
         getPhotoAction().takePhoto(PhotoAction.PHOTO_TACK, Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
-    @Event(value = R.id.llPhoto)
-    private void onllPhotoClick(View view) {
+    //@Event(value = R.id.llPhoto)
+    @OnClick(R.id.llPhoto)
+    protected void onllPhotoClick(View view) {
         getPhotoAction().takePhoto(PhotoAction.PHOTO_TACK, Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
 
-    @Event(value = R.id.btnSelectPhoto)
-    private void onbtnSelectPhotoClick(View view) {
+    // @Event(value = R.id.btnSelectPhoto)
+    @OnClick(R.id.btnSelectPhoto)
+    protected void onbtnSelectPhotoClick(View view) {
         getPhotoAction().takePhoto(PhotoAction.PHOTO_PICKUP, Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
@@ -296,6 +292,11 @@ public class MarkEditor extends BaseActivity {
                 Uri.parse("android-app://com.srmn.xwork.gpstoolkit/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_mark_editor;
     }
 
     @Override

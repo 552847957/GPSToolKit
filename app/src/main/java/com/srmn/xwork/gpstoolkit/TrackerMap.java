@@ -36,8 +36,7 @@ import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,33 +44,45 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
 
-@ContentView(R.layout.activity_tracker_map)
+
 public class TrackerMap extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "TrackerMap";
-    @ViewInject(R.id.btnStart)
+    @BindView(R.id.btnStart)
     protected Button btnStart;
-    @ViewInject(R.id.btnEnd)
+    @BindView(R.id.btnEnd)
     protected Button btnEnd;
-    @ViewInject(R.id.btnUpload)
+    @BindView(R.id.btnUpload)
     protected Button btnUpload;
 
 
-    @ViewInject(R.id.txtTrackerTime)
+    @BindView(R.id.txtTrackerTime)
     protected TextView txtTrackerTime;
-    @ViewInject(R.id.txtTrackerLength)
+    @BindView(R.id.txtTrackerLength)
     protected TextView txtTrackerLength;
 
 
-    @ViewInject(R.id.txtSatelliteCount)
+    @BindView(R.id.txtSatelliteCount)
     protected TextView txtSatelliteCount;
-    @ViewInject(R.id.txtTrackerStatus)
+    @BindView(R.id.txtTrackerStatus)
     protected TextView txtTrackerStatus;
-    @ViewInject(R.id.txtTrackerLocationInfo)
+    @BindView(R.id.txtTrackerLocationInfo)
     protected TextView txtTrackerLocationInfo;
+    @BindView(R.id.mapView)
+    protected MapView mapView;
     Timer timer = new Timer();
-    private MapView mapView;
+    TimerTask task = new TimerTask() {
+
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
     private com.amap.api.maps.AMap aMap;
     private RouterPath routerPath;
     Handler handler = new Handler() {
@@ -124,16 +135,6 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
 
         ;
     };
-    TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            // 需要做的事:发送消息
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
-        }
-    };
     private GISLocation currentLocation;
     private GISSatelliteStatus gisSatelliteStatus;
     private MyGPSReceiver gpsReceiver = null;
@@ -141,7 +142,7 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mapView = (MapView) findViewById(R.id.mapView);
+
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         hideActionBar();
 
@@ -175,6 +176,11 @@ public class TrackerMap extends BaseActivity implements View.OnClickListener {
         timer.schedule(task, 5000, 10000); // 10s后执行task,经过10s再次执行
 
 
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_tracker_map;
     }
 
     private void initMap() {

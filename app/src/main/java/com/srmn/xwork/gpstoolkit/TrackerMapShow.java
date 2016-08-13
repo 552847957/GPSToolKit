@@ -36,8 +36,6 @@ import com.srmn.xwork.gpstoolkit.Entities.RouterPath;
 import com.srmn.xwork.gpstoolkit.Entities.RouterPathItem;
 import com.srmn.xwork.gpstoolkit.Tasks.SaveRouterPathTask;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,32 +43,33 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
+
 /**
  * Created by kiler on 2016/3/12.
  */
-@ContentView(R.layout.activity_tracker_map)
 public class TrackerMapShow extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "TrackerMapShow";
-    @ViewInject(R.id.btnStart)
+    @BindView(R.id.btnStart)
     protected Button btnStart;
-    @ViewInject(R.id.btnEnd)
+    @BindView(R.id.btnEnd)
     protected Button btnEnd;
-    @ViewInject(R.id.btnUpload)
+    @BindView(R.id.btnUpload)
     protected Button btnUpload;
 
 
-    @ViewInject(R.id.txtTrackerTime)
+    @BindView(R.id.txtTrackerTime)
     protected TextView txtTrackerTime;
-    @ViewInject(R.id.txtTrackerLength)
+    @BindView(R.id.txtTrackerLength)
     protected TextView txtTrackerLength;
 
 
-    @ViewInject(R.id.txtSatelliteCount)
+    @BindView(R.id.txtSatelliteCount)
     protected TextView txtSatelliteCount;
-    @ViewInject(R.id.txtTrackerStatus)
+    @BindView(R.id.txtTrackerStatus)
     protected TextView txtTrackerStatus;
-    @ViewInject(R.id.txtTrackerLocationInfo)
+    @BindView(R.id.txtTrackerLocationInfo)
     protected TextView txtTrackerLocationInfo;
 
 
@@ -98,6 +97,11 @@ public class TrackerMapShow extends BaseActivity implements View.OnClickListener
         }
 
 
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_tracker_map;
     }
 
 

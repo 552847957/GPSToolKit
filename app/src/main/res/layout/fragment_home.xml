@@ -65,28 +65,28 @@
                     android:id="@+id/txtlat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="纬度：28.299998"
+                    android:text="纬度："
                     android:textColor="@color/c_white"></TextView>
 
                 <TextView
                     android:id="@+id/txtlng"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="经度：112.199998"
+                    android:text="经度："
                     android:textColor="@color/c_white"></TextView>
 
                 <TextView
                     android:id="@+id/txtaltaccuracy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="海拔：0.0 m  精度:±365.93米"
+                    android:text="海拔：  精度: "
                     android:textColor="@color/c_white"></TextView>
 
                 <TextView
                     android:id="@+id/txtaddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="中国湖南省长沙市宁乡县老粮仓镇"></TextView>
+                    android:text=""></TextView>
             </LinearLayout>
 
 

@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 
 import org.xutils.x;
 
+
 /**
  * Created by wyouflf on 15/11/4.
  */
 public class BaseFragment extends Fragment {
 
     protected Context parentActivity = null;
-    private boolean injected = false;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,18 +27,6 @@ public class BaseFragment extends Fragment {
         parentActivity = this.getActivity();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        injected = true;
-        return x.view().inject(this, inflater, container);
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!injected) {
-            x.view().inject(this, this.getView());
-        }
-    }
 
 }

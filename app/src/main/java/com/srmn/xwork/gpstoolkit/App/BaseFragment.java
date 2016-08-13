@@ -6,13 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.srmn.xwork.gpstoolkit.Dao.DaoContainer;
+import com.srmn.xwork.gpstoolkit.R;
 
 import org.xutils.x;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by kiler on 2016/2/26.
  */
 public class BaseFragment extends com.srmn.xwork.androidlib.ui.BaseFragment {
+
+    protected Unbinder unbinder;
+
+
 
     public DaoContainer getDaos() {
         return MyApplication.getInstance().getDaos();
@@ -22,20 +30,5 @@ public class BaseFragment extends com.srmn.xwork.androidlib.ui.BaseFragment {
         return MyApplication.getInstance();
     }
 
-    private boolean injected = false;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        injected = true;
-        return x.view().inject(this, inflater, container);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!injected) {
-            x.view().inject(this, this.getView());
-        }
-    }
 
 }

@@ -16,10 +16,10 @@ import com.avos.avoscloud.SaveCallback;
 import com.genymotion.api.GenymotionManager;
 import com.genymotion.api.Gps;
 import com.google.gson.Gson;
+import com.srmn.xwork.androidlib.gis.AMapHelper;
 import com.srmn.xwork.androidlib.gis.GISLocation;
 import com.srmn.xwork.androidlib.gis.GISLocationService;
 import com.srmn.xwork.androidlib.gis.GISSatelliteStatus;
-import com.srmn.xwork.androidlib.utils.AMapUtils;
 import com.srmn.xwork.androidlib.utils.DateTimeUtil;
 import com.srmn.xwork.androidlib.utils.GsonUtil;
 import com.srmn.xwork.androidlib.utils.NumberUtil;
@@ -43,7 +43,7 @@ import org.xutils.x;
 import java.util.Date;
 import java.util.List;
 
-import cn.jpush.android.api.JPushInterface;
+
 
 
 /**
@@ -303,7 +303,7 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
 
         if (subItems.size() >= 2) {
             for (int i = 1; i < subItems.size(); i++) {
-                distance = distance + AMapUtils.calculateLineDistance(subItems.get(i - 1).getLatitude(), subItems.get(i - 1).getLongitude(), subItems.get(i).getLatitude(), subItems.get(i).getLongitude());
+                distance = distance + AMapHelper.calculateLineDistance(subItems.get(i - 1).getLatitude(), subItems.get(i - 1).getLongitude(), subItems.get(i).getLatitude(), subItems.get(i).getLongitude());
             }
         }
 
@@ -333,26 +333,6 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
     public RouterPath getCurrentTackerPath() {
         return getDaos().getRouterPathDaoInstance().findByCode(getCurrentTackerPathCode());
     }
-
-    /**
-     * 获取广播数据
-     *
-     * @author jiqinlin
-     */
-    public class MyGSPReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle = intent.getExtras();
-
-            if (bundle.containsKey(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION)) {
-                GISLocation currentLocation = (GISLocation) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION);
-                if (getStackerIsStart())
-                    TrackerCurrentTracePathItem(currentLocation);
-            }
-
-        }
-    }
-
 
     /**
      * 存储数据(Long)
@@ -397,7 +377,6 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
         putSharedPrefsStringValue(name, key, gson.toJson(obj));
     }
 
-
     public <T> T getSharedPrefsJSonValue(String name, String key, Class<T> classOfT) {
         String json = getSharedPrefsStringValue(name, key, "");
 
@@ -435,6 +414,25 @@ public class MyApplication extends com.srmn.xwork.androidlib.ui.MyApplication {
     public boolean getSharedPrefsBooleanValue(String name, String key,
                                               boolean defValue) {
         return this.getSharedPreferences(name, Context.MODE_PRIVATE).getBoolean(key, defValue);
+    }
+
+    /**
+     * 获取广播数据
+     *
+     * @author jiqinlin
+     */
+    public class MyGSPReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+
+            if (bundle.containsKey(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION)) {
+                GISLocation currentLocation = (GISLocation) bundle.getSerializable(GISLocationService.INTENT_ACTION_UPDATE_DATA_EXTRA_LOCATION);
+                if (getStackerIsStart())
+                    TrackerCurrentTracePathItem(currentLocation);
+            }
+
+        }
     }
 
 }

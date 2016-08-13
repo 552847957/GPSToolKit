@@ -25,18 +25,19 @@ import com.srmn.xwork.gpstoolkit.App.MyApplication;
 import com.srmn.xwork.gpstoolkit.Entities.MarkerCategory;
 
 import org.xutils.ex.DbException;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ContentView(R.layout.activity_mark_category_manage)
+import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+
 public class MarkCategoryManage extends BaseActivity {
 
 
-    @ViewInject(R.id.lstCategory)
+    @BindView(R.id.lstCategory)
     protected ListView lstCategory;
 
     protected List<MarkerCategory> dataItems;
@@ -46,6 +47,7 @@ public class MarkCategoryManage extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         showBackButton();
 
         LoadCategoryData();
@@ -81,21 +83,6 @@ public class MarkCategoryManage extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void setHeight() {
-//        int listViewHeight = 0;
-//        int adaptCount = markerCategoryAdapter.getCount();
-//        for(int i=0;i<adaptCount;i++){
-//            View temp = markerCategoryAdapter.getView(i,null,lstCategory);
-//            temp.measure(0,0);
-//            listViewHeight += temp.getMeasuredHeight();
-//        }
-//
-//        ViewGroup.LayoutParams layoutParams = this.lstCategory.getLayoutParams();
-//        layoutParams.width = LinearLayout.LayoutParams.FILL_PARENT;
-//        layoutParams.height = listViewHeight;
-//        lstCategory.setLayoutParams(layoutParams);
-//    }
-
     public void reloadData() {
         LoadCategoryData();
 
@@ -117,11 +104,13 @@ public class MarkCategoryManage extends BaseActivity {
         }
     }
 
-    @Event(value = R.id.lstCategory, type = ListView.OnItemClickListener.class)
-    private void lstCategoryOnItemClick(AdapterView parent, View view, int position, long id) {
+    //@Event(value = R.id.lstCategory, type = ListView.OnItemClickListener.class)
+    @OnItemClick(R.id.lstCategory)
+    protected void lstCategoryOnItemClick(AdapterView<?> parent, View v, int aPosition,
+                                          long arg3) {
 
-        final View v = LayoutInflater.from(context).inflate(R.layout.dialog_operation, null);
-        final MarkerCategory opData = (MarkerCategory) parent.getItemAtPosition(position);
+        final View v1 = LayoutInflater.from(context).inflate(R.layout.dialog_operation, null);
+        final MarkerCategory opData = (MarkerCategory) parent.getItemAtPosition(aPosition);
 
 
         View.OnClickListener onclick = new View.OnClickListener() {
@@ -148,8 +137,8 @@ public class MarkCategoryManage extends BaseActivity {
             }
         };
 
-        RelativeLayout rlEdit = (RelativeLayout) v.findViewById(R.id.rlEdit);
-        RelativeLayout rlDelete = (RelativeLayout) v.findViewById(R.id.rlDelete);
+        RelativeLayout rlEdit = (RelativeLayout) v1.findViewById(R.id.rlEdit);
+        RelativeLayout rlDelete = (RelativeLayout) v1.findViewById(R.id.rlDelete);
 
         rlEdit.setOnClickListener(onclick);
         rlDelete.setOnClickListener(onclick);
@@ -157,17 +146,23 @@ public class MarkCategoryManage extends BaseActivity {
         opEditDialog = new android.app.AlertDialog.Builder(context)
                 .setTitle("操作数据")
                 .setIcon(android.R.drawable.ic_dialog_info)
-                .setView(v)
+                .setView(v1)
                 .setNegativeButton("取消", null)
                 .show();
 
     }
 
-    @Event(value = R.id.btnSave)
-    private void onSaveClick(View view) {
+    //@Event(value = R.id.btnSave)
+    @OnClick(R.id.btnSave)
+    protected void onSaveClick(View view) {
 
         showEditDialog(null);
 
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_mark_category_manage;
     }
 
     private void showEditDialog(final MarkerCategory opData) {
