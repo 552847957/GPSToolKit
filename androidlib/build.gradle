@@ -27,9 +27,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile files('libs/AMap_Location_V2.4.1_20160414.jar')
-    compile files('libs/AMap_Search_V3.2.1_20160308.jar')
-    compile files('libs/AMap_3DMap_V3.3.1_20160419.jar')
+    compile files('libs/AMap3DMap_3.4.0_AMapSearch_3.4.0_AMapLocation_2.8.0_20160811.jar')
     compile files('libs/Volley.jar')
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
