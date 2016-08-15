@@ -210,6 +210,13 @@ public class MarkEditor extends BaseActivity {
     @OnClick(R.id.btnSave)
     protected void onbtnSaveClick(View view) {
 
+
+        MarkerCategory markerCategory = (MarkerCategory) spnCategory.getSelectedItem();
+
+        if (markerCategory == null) {
+            showShortToastMessage("请先选择一个标注类别！");
+        }
+
         txtName.clearFocus();
         txtLocationInfo.clearFocus();
         txtRemark.clearFocus();
@@ -218,7 +225,6 @@ public class MarkEditor extends BaseActivity {
         Marker editData = getCurrentData();
 
 
-        MarkerCategory markerCategory = (MarkerCategory) spnCategory.getSelectedItem();
         editData.setMarkerCategoryID(markerCategory.getId());
         editData.setName(txtName.getText().toString());
         editData.setImagesList(getCurrentData().imagesList);
