@@ -169,13 +169,13 @@ public class LocationFragment extends BaseFragment {
 
             if (convertView == null) {
                 view = LayoutInflater.from(context).inflate(layoutID, null);
-                viewHolder = new ViewHolder();
-                viewHolder.txtDesciption = (TextView) view.findViewById(R.id.txtDesciption);
-                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
-                viewHolder.btnPublish = (BootstrapButton) view.findViewById(R.id.btnPublish);
-                viewHolder.btnExport = (BootstrapButton) view.findViewById(R.id.btnExport);
-                viewHolder.btnMap = (BootstrapButton) view.findViewById(R.id.btnMap);
-                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+                viewHolder = new ViewHolder(view);
+//                viewHolder.txtDesciption = (TextView) view.findViewById(R.id.txtDesciption);
+//                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+//                viewHolder.btnPublish = (BootstrapButton) view.findViewById(R.id.btnPublish);
+//                viewHolder.btnExport = (BootstrapButton) view.findViewById(R.id.btnExport);
+//                viewHolder.btnMap = (BootstrapButton) view.findViewById(R.id.btnMap);
+//                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
                 view.setTag(viewHolder);
             } else {
                 view = convertView;
@@ -302,12 +302,22 @@ public class LocationFragment extends BaseFragment {
         }
 
         class ViewHolder {
+            @BindView(R.id.txtName)
             public TextView txtName;
+            @BindView(R.id.txtDesciption)
             public TextView txtDesciption;
+            @BindView(R.id.btnPublish)
             public BootstrapButton btnPublish;
+            @BindView(R.id.btnExport)
             public BootstrapButton btnExport;
+            @BindView(R.id.btnMap)
             public BootstrapButton btnMap;
+            @BindView(R.id.ll_item)
             public LinearLayout ll_item;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
     }
 }

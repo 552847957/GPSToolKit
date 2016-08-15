@@ -156,13 +156,13 @@ public class TrackerFragment extends BaseFragment {
 
             if (convertView == null) {
                 view = LayoutInflater.from(context).inflate(layoutID, null);
-                viewHolder = new ViewHolder();
-                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
-                viewHolder.txtDateTime = (TextView) view.findViewById(R.id.txtDateTime);
-                viewHolder.txtPointCount = (TextView) view.findViewById(R.id.txtPointCount);
-                viewHolder.txtTime = (TextView) view.findViewById(R.id.txtTime);
-                viewHolder.txtLength = (TextView) view.findViewById(R.id.txtLength);
-                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+                viewHolder = new ViewHolder(view);
+//                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+//                viewHolder.txtDateTime = (TextView) view.findViewById(R.id.txtDateTime);
+//                viewHolder.txtPointCount = (TextView) view.findViewById(R.id.txtPointCount);
+//                viewHolder.txtTime = (TextView) view.findViewById(R.id.txtTime);
+//                viewHolder.txtLength = (TextView) view.findViewById(R.id.txtLength);
+//                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
 
                 viewHolder.ll_item.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -190,12 +190,22 @@ public class TrackerFragment extends BaseFragment {
         }
 
         class ViewHolder {
+            @BindView(R.id.txtName)
             public TextView txtName;
+            @BindView(R.id.txtDateTime)
             public TextView txtDateTime;
+            @BindView(R.id.txtPointCount)
             public TextView txtPointCount;
+            @BindView(R.id.txtTime)
             public TextView txtTime;
+            @BindView(R.id.txtLength)
             public TextView txtLength;
+            @BindView(R.id.ll_item)
             public LinearLayout ll_item;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
     }
 }

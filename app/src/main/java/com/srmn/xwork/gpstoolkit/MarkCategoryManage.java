@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
@@ -259,9 +260,9 @@ public class MarkCategoryManage extends BaseActivity {
 
             if (convertView == null) {
                 view = LayoutInflater.from(context).inflate(layoutID, null);
-                viewHolder = new ViewHolder();
-                viewHolder.txtId = (TextView) view.findViewById(R.id.txtId);
-                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+                viewHolder = new ViewHolder(view);
+//                viewHolder.txtId = (TextView) view.findViewById(R.id.txtId);
+//                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
                 view.setTag(viewHolder);
             } else {
                 view = convertView;
@@ -276,8 +277,14 @@ public class MarkCategoryManage extends BaseActivity {
         }
 
         class ViewHolder {
+            @BindView(R.id.txtId)
             public TextView txtId;
+            @BindView(R.id.txtName)
             public TextView txtName;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
     }
 }

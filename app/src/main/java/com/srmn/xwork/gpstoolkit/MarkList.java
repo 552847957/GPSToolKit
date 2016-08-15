@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class MarkList extends BaseActivity {
@@ -100,17 +101,17 @@ public class MarkList extends BaseActivity {
 
             if (convertView == null) {
                 view = LayoutInflater.from(context).inflate(layoutID, null);
-                viewHolder = new ViewHolder();
-                viewHolder.txtDesciption = (TextView) view.findViewById(R.id.txtDesciption);
-                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
-                viewHolder.txtLocation = (TextView) view.findViewById(R.id.txtLocation);
-                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
-                viewHolder.txtInfo = (TextView) view.findViewById(R.id.txtInfo);
-                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
-                viewHolder.btnEdit = (BootstrapButton) view.findViewById(R.id.btnEdit);
-                viewHolder.btnDelete = (BootstrapButton) view.findViewById(R.id.btnDelete);
-                viewHolder.btnShow = (BootstrapButton) view.findViewById(R.id.btnShow);
-                viewHolder.btnImage = (BootstrapButton) view.findViewById(R.id.btnImage);
+                viewHolder = new ViewHolder(view);
+//                viewHolder.txtDesciption = (TextView) view.findViewById(R.id.txtDesciption);
+//                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+//                viewHolder.txtLocation = (TextView) view.findViewById(R.id.txtLocation);
+//                viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+//                viewHolder.txtInfo = (TextView) view.findViewById(R.id.txtInfo);
+//                viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+//                viewHolder.btnEdit = (BootstrapButton) view.findViewById(R.id.btnEdit);
+//                viewHolder.btnDelete = (BootstrapButton) view.findViewById(R.id.btnDelete);
+//                viewHolder.btnShow = (BootstrapButton) view.findViewById(R.id.btnShow);
+//                viewHolder.btnImage = (BootstrapButton) view.findViewById(R.id.btnImage);
 
                 view.setTag(viewHolder);
             } else {
@@ -214,15 +215,28 @@ public class MarkList extends BaseActivity {
         }
 
         class ViewHolder {
+            @BindView(R.id.txtName)
             public TextView txtName;
+            @BindView(R.id.txtLocation)
             public TextView txtLocation;
+            @BindView(R.id.txtDesciption)
             public TextView txtDesciption;
+            @BindView(R.id.txtInfo)
             public TextView txtInfo;
+            @BindView(R.id.ll_item)
             public LinearLayout ll_item;
+            @BindView(R.id.btnEdit)
             public BootstrapButton btnEdit;
+            @BindView(R.id.btnDelete)
             public BootstrapButton btnDelete;
+            @BindView(R.id.btnShow)
             public BootstrapButton btnShow;
+            @BindView(R.id.btnImage)
             public BootstrapButton btnImage;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
 
         }
     }
